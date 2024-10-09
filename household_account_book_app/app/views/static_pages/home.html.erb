@@ -1,7 +1,25 @@
 <% provide(:title, "Home") %>
-<h1>Sample App</h1>
-<p>
-  This is the home page for the
-  <a href="https://railstutorial.jp/">Ruby on Rails Tutorial</a>
-  sample application.
-</p>
+<h1>家計を改善できる家計簿アプリ</h1>
+<div class="container-list">
+    <div class="container-form">
+        <div class="container-signin">
+            <h1>サインイン</h1>
+            <div class="email">
+                <p>メールアドレス</p>
+                <input class="form-email" type="text"/>
+            </div>
+            <div class="password">
+                <p>パスワード</p>
+                <input class="form-password" type="text"/>
+            </div>
+            <button class="button-signin" type="button">SignIn</button>
+        </div>
+    </div>
+    <div class="container-form">
+         <div class="container-signup">
+            <h1>サインアップ</h1>
+            <p>一緒に家計改善を始めよう!</p>
+            <button class="button-signup" type="button">SignUp</button>
+        </div>
+    </div>
+</div>
