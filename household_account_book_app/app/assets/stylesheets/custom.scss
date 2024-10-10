@@ -37,12 +37,14 @@ header {
   border-radius: 10px;
 }
 
-.email {
-  margin: 10px 10px;
-}
+.container-signin {
+  .email {
+    margin: 10px 10px;
+  }
 
-.password {
-  margin: 30px 10px;
+  .password {
+    margin: 30px 10px;
+  }
 }
 
 .button-signin {
