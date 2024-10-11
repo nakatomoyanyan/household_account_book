@@ -37,30 +37,55 @@ header {
   border-radius: 10px;
 }
 
+.container-signup {
+  p {
+    margin: 100px 50px;
+  }
+  .button-signup {
+    margin-top: 10px;
+    background-color: #000000;
+    color: white;
+  }
+}
+
 .container-signin {
   .email {
     margin: 10px 10px;
   }
-
   .password {
     margin: 30px 10px;
   }
+  .button-signin {
+    margin-top: 10px;
+    background-color: #000000;
+    color: white;
+  }
 }
 
-.button-signin {
-  margin-top: 10px;
-  background-color: #000000;
-  color: white;
-}
-
-.container-signup p {
-  margin: 100px 50px;
-}
-
-.button-signup {
-  margin-top: 10px;
-  background-color: #000000;
-  color: white;
+.container-signup-page-form {
+  border: 3px solid black;
+  border-radius: 10px;
+  height: 400px;
+  .user-name {
+    margin: 10px;
+  }
+  .email {
+    margin: 10px;
+  }
+  .password {
+    margin: 10px;
+  }
+  .password-confirmation {
+    margin: 10px;
+  }
+  .submit-button {
+    margin: 20px;
+    text-align: center;
+    .button {
+      background-color: #000000;
+      color: white;
+    }
+  }
 }
 
 footer {
