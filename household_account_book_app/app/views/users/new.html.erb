@@ -1,5 +1,6 @@
 <div class="container-signup-page">
     <h1>アカウント作成</h1>
+    <%= render 'shared/error_messages' %>
     <div class="container-signup-page-form">
         <%= form_with model: @user do |f| %>
             <div class="user-name">

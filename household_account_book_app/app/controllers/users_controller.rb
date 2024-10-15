@@ -8,7 +8,7 @@ class UsersController < ApplicationController
       flash[:success] = "家計簿アプリへようこそ！"
       redirect_to static_pages_home_url #仮のURL
     else
-      render 'new'
+      render 'new', status: :unprocessable_entity
     end
   end
   private
