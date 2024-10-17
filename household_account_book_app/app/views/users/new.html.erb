@@ -4,7 +4,7 @@
     <div class="container-signup-page-form">
         <%= form_with model: @user do |f| %>
             <div class="user-name">
-                <%= f.label :user_name, "ユーザー名", class: "form-label" %>
+                <%= f.label :user_name, "ユーザー名（20文字以内）", class: "form-label" %>
                 <%= f.text_field :user_name, class: "form-control" %>
             </div>
             <div class="email">
@@ -12,7 +12,7 @@
                 <%= f.text_field :email, class: "form-control" %>
             </div>
             <div class="password">
-                <%= f.label :password, "パスワード", class: "form-label" %>
+                <%= f.label :password, "パスワード (英数字5文字以上)", class: "form-label" %>
                 <%= f.text_field :password, class: "form-control" %>
             </div>
             <div class="password-confirmation">
