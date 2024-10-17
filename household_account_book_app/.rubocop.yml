@@ -1,8 +1,156 @@
-# Omakase Ruby styling for Rails
-inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+inherit_from: .rubocop_todo.yml
 
-# Overwrite or add rules to create your own house style
-#
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+require:
+  - rubocop-rspec
+  - rubocop-rails
+  - rubocop-performance
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+  Exclude:
+    - "node_modules/**/*"
+    - "vendor/**/*"
+    - "bin/**/*"
+    - "config/**/*"
+    - "db/**/*"
+    - "tmp/**/*"
+    - "spec/factories/**/*"
+
+Metrics/BlockLength:
+  Exclude:
+    - "lib/**/tasks/*"
+    - "spec/**/*"
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    # change マッチャのために無視する。
+    - "spec/**/*"
+
+# +-<>=|&あたりの記号系の厳密なルール
+# メインの処理では適用するが RSpec::Parameterized::TableSyntax の表記で誤検知するためrubocopでは無視する
+Lint/BinaryOperatorWithIdenticalOperands:
+  Exclude:
+    - "spec/**/*"
+
+# 日本語のコメントを許可する。
+Style/AsciiComments:
+  Enabled: false
+
+# Module::Class という記法を許可する。
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# メソッドチェインの途中で改行するときのドットの位置は前方にする。
+Layout/DotPosition:
+  EnforcedStyle: leading
+
+# 複数行に渡ってメソッドチェインする際にインデントを先頭行に合わせなくてもいいようにする。
+Layout/MultilineOperationIndentation:
+  Enabled: false
+
+# class,moduleのドキュメントは必須にしない。
+Style/Documentation:
+  Enabled: false
+
+# コメントのfreezeは必須にしない
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# 3 文字未満のメソッド引数も許容する。
+Naming/MethodParameterName:
+  Enabled: false
+
+# 数字付きの変数名を許可する
+# xy座標等で数字こそ可読性が高い場合やテストデータ生成時に1,2もa,bも大差ないため
+Naming/VariableNumber:
+  Enabled: false
+
+# snake_case 以外の変数名を許可する
+# A軸やパターンAなどのアルファベットを利用する際に厳密なsnake_caseとは外れるため
+RSpec/VariableName:
+  Enabled: false
+
+# 無意味にsuperを呼ばない
+Lint/MissingSuper:
+  Enabled: false
+
+# 空ブロックを許す
+# これを検知することの利益より、ブロック要求関数に対して何も実行しないブロックを渡すときに困る不利益が大きいと思われるため
+Lint/EmptyBlock:
+  Enabled: false
+
+# context の「〜の場合」など suffix を強制しない
+RSpec/ContextWording:
+  Enabled: false
+
+# it の中の expect の数
+# パフォーマンス等の都合のため aggregate_failuresオプションをONにして意図して複数expectを使う想定の運用であるため制限しない
+RSpec/MultipleExpectations:
+  Enabled: false
+
+# expectの行数
+# パフォーマンス等の都合のため aggregate_failuresオプションをONにして意図して複数expectを使う想定の運用であるため長さを許容
+# とは言え完全無制限も気になるので2023年11月時点の既存実装で必要な長さを制限値としておく
+RSpec/ExampleLength:
+  Max: 70
+
+# before(:all)などは使用する（テストデータはDatabaseCleanerで適切に削除されるため問題なし）
+RSpec/BeforeAfterAll:
+  Enabled: false
+
+# テスト条件による分岐などを考えてネスト制限は5段まで緩和する
+RSpec/NestedGroups:
+  Max: 5
+
+# 1:他の構造や集計などでテストをしていると基本ルールだと厳しすぎる
+# とは言え際限なく許可するのも問題だと思われるのでrubocop-rspec適用時に記述済みの件数まで許容する
+RSpec/MultipleMemoizedHelpers:
+  Max: 30
+
+# 語尾数値のletを許容する個数
+# 英語ネイティブではないのでパターン列挙際に文章化しても恩恵に限界があるためrubocop-rspec適用時に大半が通過する件数まで許容する
+RSpec/IndexedLet:
+  Max: 6
+
+# instance_double等の引数に実クラスは必須としない
+# 最低限の挙動があるだけのダミーモック instance_double('Dummy', call: :hoge) の利用のため緩和する
+RSpec/VerifiedDoubleReference:
+  Enabled: false
+
+# メソッド行数
+# 行数自体はデフォルトに従うが可読性を損なわない範囲で緩和する
+Metrics/MethodLength:
+  # 配列、ハッシュ、ヒアドキュメント、またはメソッド呼び出しが複数行にわたっていても1行としてカウントする
+  CountAsOne: ["array", "heredoc", "method_call"]
+
+# rel: 'noopener' が付与されると、window.opener が使用できなくなるため無効化する
+Rails/LinkToBlank:
+  Enabled: false
+
+# ActionController::Base ではなく ApplicationController 継承の強制を無効化
+Rails/ApplicationController:
+  Enabled: false
+
+# バリデーションをスキップするメソッド使用を禁止にしない
+# 意図的にバリデーションをスキップしたい場合があるため
+Rails/SkipsModelValidations:
+  Enabled: false
+
+# Rails.env.xxx で以下定義以外が指定されていれば警告
+Rails/UnknownEnv:
+  Environments: ["production", "trial", "staging", "rr", "development", "test"]
+
+# scope の引数をラムダで囲うように強制するルールを無効化
+# Queryパターン(app/queries/直下ファイル群)をラムダで囲うとエラーになるため
+Rails/ScopeArgs:
+  Enabled: false
+
+# `where.not` の挙動が Rails 6.1 から変更されたので警告が表示される
+# だが、既に変更された挙動に対応して処理されているため警告不要で無効化
+Rails/WhereNotWithMultipleConditions:
+  Enabled: false
+
+# block.call より yield を強制するルールだが、視認性が悪くなる割にパフォーマンスも誤差なので無効
+Performance/RedundantBlockCall:
+  Enabled: false
