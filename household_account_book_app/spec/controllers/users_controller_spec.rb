@@ -1,16 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  before do
-    @user = FactoryBot.build(:user)
-  end
-
+  let!(:user) { FactoryBot.build(:user) }
   let(:valid_user_params) do
     {
-      user_name: @user.user_name,
-      email: @user.email,
-      password: @user.password,
-      password_confirmation: @user.password_confirmation
+      user_name: user.user_name,
+      email: user.email,
+      password: user.password,
+      password_confirmation: user.password_confirmation
     }
   end
 
