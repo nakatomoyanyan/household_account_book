@@ -19,9 +19,7 @@
          <div class="container-signup">
             <h1>サインアップ</h1>
             <p>一緒に家計改善を始めよう!</p>
-            <%= form_with url: new_user_path, method: :get do %>
-                <%= submit_tag 'SignUp', class: 'button-signup' %>
-            <% end %>
+            <%= button_to 'SignUp', new_user_path, method: :get, class: 'button-signup' %>
         </div>
     </div>
 </div>
