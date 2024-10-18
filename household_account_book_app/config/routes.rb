@@ -13,6 +13,4 @@ Rails.application.routes.draw do
   # root "posts#index"
   get "static_pages/home", to: "static_pages#home"
   resources :users
-  get "users/new", to: "users#new"
-  post "users/new", to: "users#create"
 end
