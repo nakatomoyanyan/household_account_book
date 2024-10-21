@@ -22,6 +22,9 @@
       <div class="header-container">
         家計簿アプリ
       </div>
+      <% flash.each do |message_type, message| %>
+        <div class="alert alert-<%= message_type %>"><%= message %></div>
+      <% end %>
     </header>
     <div class="container">
       <%= yield %>
