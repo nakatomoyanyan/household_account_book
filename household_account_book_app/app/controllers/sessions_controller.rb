@@ -3,16 +3,17 @@ class SessionsController < ApplicationController
 
   def create
     @user = login(params[:email], params[:password])
-    flash[:notice] = if @user
-                       'サインインに成功しました'
-                     else
-                       'サインインに失敗しました'
-                     end
-    redirect_to '/static_pages/home'
+    if @user
+      flash[:notice] = 'サインインに成功しました'
+      redirect_to '/static_pages/home'
+    else
+      flash[:notice] = 'サインインに失敗しました'
+      redirect_to root_path
+    end
   end
 
   def destroy
     logout
-    redirect_to '/static_pages/home'
+    redirect_to root_path
   end
 end
