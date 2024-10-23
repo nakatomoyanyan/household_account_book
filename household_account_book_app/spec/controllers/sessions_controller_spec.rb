@@ -37,7 +37,7 @@ RSpec.describe SessionsController, type: :controller do
     end
 
     it 'redirects to the home page' do
-      expect(response).to redirect_to('/static_pages/home')
+      expect(response).to redirect_to(root_path)
     end
   end
 
@@ -51,7 +51,7 @@ RSpec.describe SessionsController, type: :controller do
     end
 
     it 'redirects to the home page' do
-      expect(response).to redirect_to('/static_pages/home')
+      expect(response).to redirect_to(root_path)
     end
   end
 end
