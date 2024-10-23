@@ -16,34 +16,7 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-
   <body>
-    <header>
-      <div class="header-container">
-        <div class="header-container-title">
-          家計簿アプリ
-        </div>
-        <% if logged_in? %>
-          <div class="header-container-list">
-            <div class="home">
-              home
-            </div>
-            <div class="income">
-              収入
-            </div>
-            <div class="expense">
-              支出
-            </div>
-            <div class="signout">
-              <%= link_to "SignOut", logout_path, data: { turbo_method: :delete }, class:"signout-button" %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-      <% flash.each do |message_type, message| %>
-        <div class="alert alert-<%= message_type %>"><%= message %></div>
-      <% end %>
-    </header>
     <div class="container">
       <%= yield %>
     </div>
