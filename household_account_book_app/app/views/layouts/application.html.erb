@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Household Account Book" %></title>
+    <title><%= yield(:title) %> || Household Account Book</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -16,16 +16,10 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-
+  <header>
+    <% yield %>
+  </header>
   <body>
-    <header>
-      <div class="header-container">
-        家計簿アプリ
-      </div>
-      <% flash.each do |message_type, message| %>
-        <div class="alert alert-<%= message_type %>"><%= message %></div>
-      <% end %>
-    </header>
     <div class="container">
       <%= yield %>
     </div>

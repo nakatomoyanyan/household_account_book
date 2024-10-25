@@ -1,25 +1,94 @@
 <% provide(:title, "Home") %>
-<h1>家計を改善できる家計簿アプリ</h1>
-<div class="container-list">
-    <div class="container-form">
-        <div class="container-signin">
-            <h1>サインイン</h1>
-            <div class="email">
-                <p>メールアドレス</p>
-                <input class="form-email" type="text"/>
+<header>
+    <div class="header-container">
+        <div class="header-container-title">
+            家計簿アプリ
+        </div>
+        <div class="header-container-list">
+            <div class="home">
+                home
             </div>
-            <div class="password">
-                <p>パスワード</p>
-                <input class="form-password" type="text"/>
+            <div class="income">
+                収入
             </div>
-            <button class="button-signin" type="button">SignIn</button>
+            <div class="expense">
+                支出
+            </div>
+            <div class="signout">
+                <%= link_to "SignOut", logout_path, data: { turbo_method: :delete }, class:"signout-button" %>
+            </div>
         </div>
     </div>
-    <div class="container-form">
-         <div class="container-signup">
-            <h1>サインアップ</h1>
-            <p>一緒に家計改善を始めよう!</p>
-            <%= button_to 'SignUp', new_user_path, method: :get, class: 'button-signup' %>
+    <% flash.each do |message_type, message| %>
+    <div class="alert alert-<%= message_type %>"><%= message %></div>
+    <% end %>
+</header>
+<body>
+    <div class="container">
+        <h1>家計簿アプリへようこそ！</h1>
+        <div class="container-home-afer-signin">
+            <p>Summary</p>
+            <div class="container-list">
+                <div class="summary">
+                    <h1>今年の収支</h1>
+                    <div class="income">
+                        <p>収入</p>
+                        <p>20000円</p>
+                    </div>
+                    <div class="expense">
+                        <p>支出</p>
+                        <p>10000円</p>
+                    </div>
+                    <div class="net">
+                        <p>計</p>
+                        <p>10000円</p>
+                    </div>
+                </div>
+                <div class="summary">
+                    <h1>今月の収支</h1>
+                    <div class="income">
+                        <p>収入</p>
+                        <p>20000円</p>
+                    </div>
+                    <div class="expense">
+                        <p>支出</p>
+                        <p>10000円</p>
+                    </div>
+                    <div class="net">
+                        <p>計</p>
+                        <p>10000円</p>
+                    </div>
+                </div>
+                <div class="easy-form">
+                    <h1>かんたん入力</h1>
+                    <div class="form">
+                        <p>日付</p>
+                        <input type="text" class="input-form">
+                    </div>
+                    <div class="form">
+                        <p>金額</p>
+                        <input type="text" class="input-form">
+                    </div>
+                    <div class="form">
+                        <p>名目</p>
+                        <select class="input-form">
+                            <option value="option1">給料</option>
+                            <option value="option2">食費</option>
+                            <option value="option3">家賃</option>
+                        </select>
+                    </div>
+                    <p class="link-edit">名目編集はこちら<p>
+                    <div class="form">
+                        <p>分類</p>
+                        <select class="input-form">
+                            <option value="option1">収入</option>
+                            <option value="option2">固定費</option>
+                            <option value="option3">流動費</option>
+                        </select>
+                    </div>
+                    <%= button_to '登録', static_pages_home_url, method: :get, class: 'button-registration' %>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</body>

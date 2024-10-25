@@ -3,13 +3,44 @@ header {
   display: flex;
   align-items: center;
   height: 100px;
+  width: 100%;
   background-color: #000000;
   color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .header-container {
-  font-size: 40px;
-  padding-left: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  .header-container-title {
+    font-size: 40px;
+    padding-left: 20px;
+  }
+  .header-container-list {
+    display: flex;
+    font-size: 30px;
+    padding-right: 20px;
+    .home {
+      padding-right: 30px;
+    }
+    .income {
+      padding-right: 30px;
+    }
+    .expense {
+      padding-right: 30px;
+    }
+    .signout {
+      padding-right: 30px;
+      .signout-button {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .container {
@@ -56,10 +87,88 @@ header {
   .password {
     margin: 30px 10px;
   }
-  .button-signin {
+  .button {
     margin-top: 10px;
     background-color: #000000;
     color: white;
+  }
+}
+
+.container-home-afer-signin {
+  padding-bottom: 20px;
+  p {
+    font-size: 30px;
+  }
+  .container-list {
+    display: flex;
+    float: left;
+    justify-content: space-around;
+    height: 500px;
+    width: 100%;
+    .summary {
+      border: 3px solid black;
+      border-radius: 10px;
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .income {
+        display: flex;
+        p {
+          float: left;
+          padding-left: 10px;
+        }
+      }
+      .expense {
+        padding-top: 20px;
+        display: flex;
+        p {
+          float: left;
+          padding-left: 10px;
+        }
+      }
+      .net {
+        padding-top: 20px;
+        display: flex;
+        p {
+          float: left;
+          padding-left: 10px;
+        }
+      }
+    }
+    .summary-this-month {
+      border: 3px solid black;
+      border-radius: 10px;
+      width: 30%;
+    }
+    .easy-form {
+      border: 3px solid black;
+      border-radius: 10px;
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .link-edit {
+        font-size: 20px;
+      }
+      .form {
+        display: flex;
+        float: left;
+        align-items: center;
+        p {
+          height: 30px;
+          padding-right: 10px;
+        }
+        .input-form {
+          height: 30px;
+        }
+      }
+      .button-registration {
+        margin-top: 10px;
+        background-color: #000000;
+        color: white;
+      }
+    }
   }
 }
 

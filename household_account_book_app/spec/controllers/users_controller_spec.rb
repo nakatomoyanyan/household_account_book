@@ -27,6 +27,11 @@ RSpec.describe UsersController, type: :controller do
       post :create, params: { user: valid_user_params }
       expect(response).to redirect_to(static_pages_home_url)
     end
+
+    it 'sign in as a user' do
+      post :create, params: { user: valid_user_params }
+      expect(session[:user_id].to_i).to eq(User.last.id)
+    end
   end
 
   context 'when #create fails' do
