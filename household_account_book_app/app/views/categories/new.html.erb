@@ -1,0 +1,61 @@
+<% provide(:title, "edit category") %>
+<header>
+    <div class="header-container">
+        <div class="header-container-title">
+            家計簿アプリ
+        </div>
+        <div class="header-container-list">
+            <div class="home">
+                <%= link_to "home", static_pages_home_url, method: :get, class:"home-button" %>
+            </div>
+            <div class="income">
+                収入
+            </div>
+            <div class="expense">
+                支出
+            </div>
+            <div class="signout">
+                <%= link_to "SignOut", logout_path, data: { turbo_method: :delete }, class:"signout-button" %>
+            </div>
+        </div>
+    </div>
+    <% flash.each do |message_type, message| %>
+    <div class="alert alert-<%= message_type %>"><%= message %></div>
+    <% end %>
+</header>
+<body>
+    <div class="container">
+        <h1>名目編集</h1>
+        <div class="container-edit-category-page">
+            <div class="container-list">
+                <div class="index-category">
+                    <h1>名目一覧</h1>
+                    <div class="category">
+                        <p>書籍</p>
+                        <p>削除</p>
+                    </div>
+                    <div class="category">
+                        <p>給料</p>
+                        <p>削除</p>
+                    </div>
+                    <div class="category">
+                        <p>家賃</p>
+                        <p>削除</p>
+                    </div>
+                </div>
+                <div class="register-category">
+                    <h1>名目登録</h1>
+                    <%= form_with model: @user do |f| %>
+                        <div class="category-name">
+                            <%= f.label :name, "名目", class: "form-label" %>
+                            <%= f.text_field :name, class: "form-control" %>
+                        </div>
+                        <div class="submit-button">
+                            <%= f.submit "登録", class: "button"%>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
