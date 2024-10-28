@@ -6,7 +6,7 @@
         </div>
         <div class="header-container-list">
             <div class="home">
-                home
+                <%= link_to "home", static_pages_home_url, method: :get, class:"home-button" %>
             </div>
             <div class="income">
                 収入
@@ -77,7 +77,7 @@
                             <option value="option3">家賃</option>
                         </select>
                     </div>
-                    <p class="link-edit">名目編集はこちら<p>
+                    <%= link_to '名目編集はこちら', new_category_path, method: :get, class: 'link-edit' %>
                     <div class="form">
                         <p>分類</p>
                         <select class="input-form">
