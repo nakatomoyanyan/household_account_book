@@ -209,7 +209,6 @@ header {
 }
 
 .container-edit-category-page {
-  padding-bottom: 20px;
   p {
     font-size: 30px;
   }
@@ -227,9 +226,15 @@ header {
       align-items: center;
       .category {
         display: flex;
+        align-items: center;
         p {
           float: left;
-          padding-left: 10px;
+          padding-right: 20px;
+          margin: 0;
+        }
+        .category-delete-button {
+          background-color: #000000;
+          color: white;
         }
       }
     }

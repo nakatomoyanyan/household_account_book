@@ -30,18 +30,12 @@
             <div class="container-list">
                 <div class="index-category">
                     <h1>名目一覧</h1>
+                    <% @categories.each do |category| %>
                     <div class="category">
-                        <p>書籍</p>
-                        <p>削除</p>
+                        <p><%= category.name%></p>
+                        <%= button_to '削除', user_category_path(@user, category), method: :delete, class: 'category-delete-button' %>
                     </div>
-                    <div class="category">
-                        <p>給料</p>
-                        <p>削除</p>
-                    </div>
-                    <div class="category">
-                        <p>家賃</p>
-                        <p>削除</p>
-                    </div>
+                    <% end %>
                 </div>
                 <div class="register-category">
                     <h1>名目登録</h1>
