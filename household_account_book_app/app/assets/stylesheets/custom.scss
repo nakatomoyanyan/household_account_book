@@ -26,6 +26,10 @@ header {
     padding-right: 20px;
     .home {
       padding-right: 30px;
+      .home-button {
+        color: inherit;
+        text-decoration: none;
+      }
     }
     .income {
       padding-right: 30px;
@@ -200,6 +204,50 @@ header {
     .button {
       background-color: #000000;
       color: white;
+    }
+  }
+}
+
+.container-edit-category-page {
+  p {
+    font-size: 30px;
+  }
+  .container-list {
+    display: flex;
+    float: left;
+    justify-content: space-around;
+    width: 100%;
+    .index-category {
+      border: 3px solid black;
+      border-radius: 10px;
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .category {
+        display: flex;
+        align-items: center;
+        p {
+          float: left;
+          padding-right: 20px;
+          margin: 0;
+        }
+        .category-delete-button {
+          background-color: #000000;
+          color: white;
+        }
+      }
+    }
+    .register-category {
+      border: 3px solid black;
+      border-radius: 10px;
+      width: 30%;
+      height: 300px;
+      .button {
+        margin-top: 20px;
+        background-color: #000000;
+        color: white;
+      }
     }
   }
 }
