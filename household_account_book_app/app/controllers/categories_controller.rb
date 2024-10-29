@@ -11,13 +11,12 @@ class CategoriesController < ApplicationController
   def create
     @category = @user.categories.new(category_params)
 
-    if @category.save
-      flash[:notice] = '登録に成功しました'
-      redirect_to user_categories_path(@user)
-    else
-      flash[:notice] = '登録に失敗しました'
-      redirect_to user_categories_path(@user)
-    end
+    flash[:notice] = if @category.save
+                       '登録に成功しました'
+                     else
+                       '登録に失敗しました'
+                     end
+    redirect_to user_categories_path(@user)
   end
 
   def destroy
@@ -27,6 +26,7 @@ class CategoriesController < ApplicationController
   end
 
   private
+
   def set_user
     @user = User.find(params[:user_id])
   end
@@ -40,9 +40,9 @@ class CategoriesController < ApplicationController
   end
 
   def authorize_user
-    unless @user == current_user
-      flash[:notice] = 'アクセス権限がありません' 
-      redirect_to root_path
-    end
+    return if @user == current_user
+
+    flash[:notice] = 'アクセス権限がありません'
+    redirect_to root_path
   end
 end
