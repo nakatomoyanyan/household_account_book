@@ -16,9 +16,11 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <header>
-    <% yield %>
-  </header>
+<header>
+  <% if logged_in? %>
+    <%= render partial: 'layouts/header' %>
+  <% end %>
+</header>
   <body>
     <div class="container">
       <%= yield %>

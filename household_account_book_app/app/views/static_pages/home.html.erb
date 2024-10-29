@@ -1,28 +1,4 @@
 <% provide(:title, "Home") %>
-<header>
-    <div class="header-container">
-        <div class="header-container-title">
-            家計簿アプリ
-        </div>
-        <div class="header-container-list">
-            <div class="home">
-                <%= link_to "home", static_pages_home_url, method: :get, class:"home-button" %>
-            </div>
-            <div class="income">
-                収入
-            </div>
-            <div class="expense">
-                支出
-            </div>
-            <div class="signout">
-                <%= link_to "SignOut", logout_path, data: { turbo_method: :delete }, class:"signout-button" %>
-            </div>
-        </div>
-    </div>
-    <% flash.each do |message_type, message| %>
-    <div class="alert alert-<%= message_type %>"><%= message %></div>
-    <% end %>
-</header>
 <body>
     <div class="container">
         <h1>家計簿アプリへようこそ！</h1>
