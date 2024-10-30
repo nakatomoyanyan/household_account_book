@@ -8,3 +8,7 @@ ja:
         email: メールアドレス
         password: パスワード
         password_confirmation: パスワード確認
+  transaction_type:
+    income: "収入"
+    fixed_expense: "固定費"
+    variable_expense: "流動費"
