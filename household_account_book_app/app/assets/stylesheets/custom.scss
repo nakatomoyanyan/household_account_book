@@ -107,7 +107,7 @@ header {
     display: flex;
     float: left;
     justify-content: space-around;
-    height: 500px;
+    height: 700px;
     width: 100%;
     .summary {
       border: 3px solid black;
@@ -155,19 +155,7 @@ header {
       .link-edit {
         font-size: 20px;
       }
-      .form {
-        display: flex;
-        float: left;
-        align-items: center;
-        p {
-          height: 30px;
-          padding-right: 10px;
-        }
-        .input-form {
-          height: 30px;
-        }
-      }
-      .button-registration {
+      .button {
         margin-top: 10px;
         background-color: #000000;
         color: white;
