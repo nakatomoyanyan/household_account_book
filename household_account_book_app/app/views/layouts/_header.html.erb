@@ -5,7 +5,7 @@
         </div>
         <div class="header-container-list">
             <div class="home">
-                <%= link_to "home", static_pages_home_url, method: :get, class:"home-button" %>
+                <%= link_to "home", user_households_path(current_user), method: :get, class:"home-button" %>
             </div>
             <div class="income">
                 収入

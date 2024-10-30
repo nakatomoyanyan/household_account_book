@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     if @user.save
       auto_login(@user)
       flash[:success] = '家計簿アプリへようこそ！'
-      redirect_to '/static_pages/home'
+      redirect_to user_households_path(@user)
     else
       render 'new', status: :unprocessable_entity
     end

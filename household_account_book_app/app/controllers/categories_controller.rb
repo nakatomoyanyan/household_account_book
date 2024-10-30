@@ -30,7 +30,7 @@ class CategoriesController < ApplicationController
   end
 
   def category
-    @category ||= User.categories.find_by(id: params[:id])
+    @category ||= current_user.categories.find_by(id: params[:id])
   end
 
   def category_params
@@ -39,7 +39,6 @@ class CategoriesController < ApplicationController
 
   def authorize_user
     return if user == current_user
-
     flash[:notice] = 'アクセス権限がありません'
     redirect_to root_path
   end
