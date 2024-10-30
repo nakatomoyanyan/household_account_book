@@ -7,7 +7,7 @@ RSpec.describe HouseholdsController, type: :controller do
   let(:valid_attributes) do
     {
       name: 'food',
-      date: Date.today,
+      date: Time.zone.today,
       amount: 1000,
       category_id: category.id,
       transaction_type: :income
@@ -28,9 +28,9 @@ RSpec.describe HouseholdsController, type: :controller do
   describe 'POST #create' do
     context 'with valid parameters' do
       it 'creates a new Household' do
-        expect {
+        expect do
           post :create, params: { user_id: user.id, household: valid_attributes }
-        }.to change(Household, :count).by(1)
+        end.to change(Household, :count).by(1)
       end
 
       it 'redirects to the user household index' do
@@ -42,9 +42,9 @@ RSpec.describe HouseholdsController, type: :controller do
 
     context 'with invalid parameters' do
       it 'does not create a new Household' do
-        expect {
+        expect do
           post :create, params: { user_id: user.id, household: { name: '', date: nil } }
-        }.to change(Household, :count).by(0)
+        end.not_to change(Household, :count)
       end
 
       it 'redirects to the user household index with an error message' do

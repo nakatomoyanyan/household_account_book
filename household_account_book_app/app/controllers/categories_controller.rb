@@ -39,6 +39,7 @@ class CategoriesController < ApplicationController
 
   def authorize_user
     return if user == current_user
+
     flash[:notice] = 'アクセス権限がありません'
     redirect_to root_path
   end

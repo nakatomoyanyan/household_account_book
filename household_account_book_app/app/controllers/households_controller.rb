@@ -15,6 +15,7 @@ class HouseholdsController < ApplicationController
                      end
     redirect_to user_households_path(user)
   end
+
   private
 
   def user
@@ -27,6 +28,7 @@ class HouseholdsController < ApplicationController
 
   def authorize_user
     return if user == current_user
+
     flash[:notice] = 'アクセス権限がありません'
     redirect_to root_path
   end
