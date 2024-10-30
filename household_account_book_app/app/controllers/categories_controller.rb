@@ -1,6 +1,5 @@
 class CategoriesController < ApplicationController
-  before_action :authorize_user
-
+  include UserResourceController
   def new
     @category = user.categories.new
     @categories = user.categories.all
@@ -25,22 +24,11 @@ class CategoriesController < ApplicationController
 
   private
 
-  def user
-    @user ||= User.find(params[:user_id])
-  end
-
   def category
     @category ||= current_user.categories.find_by(id: params[:id])
   end
 
   def category_params
     params.require(:category).permit(:name)
-  end
-
-  def authorize_user
-    return if user == current_user
-
-    flash[:notice] = 'アクセス権限がありません'
-    redirect_to root_path
   end
 end
