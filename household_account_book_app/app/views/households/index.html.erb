@@ -57,7 +57,7 @@
                         <%= link_to '名目編集はこちら', new_user_category_path(current_user), method: :get, class: 'link-edit' %>
                         <div class="transaction_type">
                             <%= f.label :transaction_type, "分類", class: "form-label" %>
-                            <%= f.select :transaction_type, Household.transaction_types.keys.map { |key| [I18n.t("transaction_type.#{key}"), key] }, { prompt: "選択してください" }, class: "form-control" %>                        
+                            <%= f.select :transaction_type, transaction_type_options, { prompt: "選択してください" }, class: "form-control" %>                        
                         </div>
                         <div class="submit-button">
                             <%= f.submit "登録", class: "button"%>
