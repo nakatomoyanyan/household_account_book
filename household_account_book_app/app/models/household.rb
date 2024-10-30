@@ -3,7 +3,7 @@ class Household < ApplicationRecord
   belongs_to :category
 
   enum :transaction_type, { income: 0, fixed_expense: 1, variable_expense: 2 }
-  validates :name, optional: true
+  validates :name, length: { maximum: 20 }, allow_blank: true
   validates :date, presence: true
   validates :transaction_type, presence: true
   validates :amount, presence: true
