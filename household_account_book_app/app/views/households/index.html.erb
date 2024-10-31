@@ -9,30 +9,30 @@
                     <h1>今年の収支</h1>
                     <div class="income">
                         <p>収入</p>
-                        <p>20000円</p>
+                        <p><%= number_to_currency(@total_income_this_year)%></p>
                     </div>
                     <div class="expense">
                         <p>支出</p>
-                        <p>10000円</p>
+                        <p><%= number_to_currency(@total_expense_this_year)%></p>
                     </div>
                     <div class="net">
                         <p>計</p>
-                        <p>10000円</p>
+                        <p><%= number_to_currency(@net_balance_this_year)%></p>
                     </div>
                 </div>
                 <div class="summary">
                     <h1>今月の収支</h1>
                     <div class="income">
                         <p>収入</p>
-                        <p>20000円</p>
+                        <p><%= number_to_currency(@total_income_this_month)%></p>
                     </div>
                     <div class="expense">
                         <p>支出</p>
-                        <p>10000円</p>
+                        <p><%= number_to_currency(@total_expense_this_month)%></p>
                     </div>
                     <div class="net">
                         <p>計</p>
-                        <p>10000円</p>
+                        <p><%= number_to_currency(@net_balance_this_month)%></p>
                     </div>
                 </div>
                 <div class="easy-form">
