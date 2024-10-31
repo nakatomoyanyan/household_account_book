@@ -2,6 +2,12 @@ class HouseholdsController < ApplicationController
   include UserResourceConcern
   def index
     @household = Household.new
+    @total_income_this_year = Household.total_income_this_year
+    @total_expense_this_year = Household.total_expense_this_year
+    @net_balance_this_year = Household.net_balance_this_year
+    @total_income_this_month = Household.total_income_this_month
+    @total_expense_this_month = Household.total_expense_this_month
+    @net_balance_this_month = Household.net_balance_this_month
   end
 
   def create
