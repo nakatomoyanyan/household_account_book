@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
-  include UserResourceController
+  include UserResourceConcern
   def new
     @category = user.categories.new
     @categories = user.categories.all

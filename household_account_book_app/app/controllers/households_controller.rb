@@ -1,5 +1,5 @@
 class HouseholdsController < ApplicationController
-  include UserResourceController
+  include UserResourceConcern
   def index
     @household = Household.new
   end

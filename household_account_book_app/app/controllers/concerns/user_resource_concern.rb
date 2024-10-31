@@ -1,4 +1,4 @@
-module UserResourceController
+module UserResourceConcern
   extend ActiveSupport::Concern
 
   included do
