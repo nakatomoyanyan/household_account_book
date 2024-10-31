@@ -1,10 +1,10 @@
-<% if @user.errors.any? %>
+<% if object.errors.any? %>
   <div>
-    <div class="alert alert-danger">
-      このフォームには <%= @user.errors.count %>個のエラーが含まれています。
+    <div>
+      このフォームには <%= object.errors.count %>個のエラーが含まれています。
     </div>
     <ul>
-    <% @user.errors.full_messages.each do |msg| %>
+    <% object.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
     <% end %>
     </ul>
