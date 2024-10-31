@@ -6,13 +6,13 @@ class HouseholdsController < ApplicationController
 
   def create
     @household = user.households.new(household_params)
-
-    flash[:notice] = if @household.save
-                       '登録に成功しました'
-                     else
-                       '登録に失敗しました'
-                     end
-    redirect_to user_households_path(user)
+    if @household.save
+      flash[:notice] = '登録に成功しました'
+      redirect_to user_households_path(user)
+    else
+      flash[:notice] = '登録に失敗しました'
+      render 'index', status: :unprocessable_entity
+    end
   end
 
   private

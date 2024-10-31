@@ -37,6 +37,7 @@
                 </div>
                 <div class="easy-form">
                     <h1>かんたん入力</h1>
+                    <%= render 'shared/error_messages', object: @household %>
                     <%= form_with model: @household, url: user_households_path(current_user) do |f| %>
                         <div class="name">
                             <%= f.label :name, "登録内容名(任意)(最大20文字)", class: "form-label" %>

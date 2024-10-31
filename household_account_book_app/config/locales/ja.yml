@@ -7,7 +7,15 @@ ja:
         user_name: ユーザー名
         email: メールアドレス
         password: パスワード
-        password_confirmation: パスワード確認
+        password_confirmation: パスワード確認       
+  activerecord:
+    models:
+      household: 家計簿
+    attributes:
+      household:
+        transaction_type: 分類
+        amount: 金額
+        category: 名目
   transaction_type:
     income: "収入"
     fixed_expense: "固定費"

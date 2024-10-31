@@ -49,8 +49,9 @@ RSpec.describe HouseholdsController, type: :controller do
 
       it 'redirects to the user household index with an error message' do
         post :create, params: { user_id: user.id, household: { name: '', date: nil } }
-        expect(response).to redirect_to(user_households_path(user))
         expect(flash[:notice]).to eq('登録に失敗しました')
+        expect(response).to render_template('index')
+        expect(response.status).to eq 422
       end
     end
 
