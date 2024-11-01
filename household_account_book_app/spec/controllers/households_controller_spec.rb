@@ -19,9 +19,48 @@ RSpec.describe HouseholdsController, type: :controller do
   end
 
   describe 'GET #index' do
+    before do
+      FactoryBot.create(:household, transaction_type: 0, date: Time.current, amount: 1000, user: user, category: category)
+      FactoryBot.create(:household, transaction_type: 1, date: Time.current, amount: 100, user: user, category: category)
+      FactoryBot.create(:household, transaction_type: 2, date: Time.current, amount: 90, user: user, category: category)
+      FactoryBot.create(:household, transaction_type: 0, date: 1.month.ago, amount: 1000, user: user, category: category)
+      FactoryBot.create(:household, transaction_type: 1, date: 1.month.ago, amount: 100, user: user, category: category)
+      FactoryBot.create(:household, transaction_type: 2, date: 1.month.ago, amount: 90, user: user, category: category)
+    end
+
     it 'assigns a new Household to @household' do
       get :index, params: { user_id: user.id }
       expect(assigns(:household)).to be_a_new(Household)
+    end
+
+    it 'assigns @total_income_this_year' do
+      get :index, params: { user_id: user.id }
+      expect(assigns(:total_income_this_year)).to eq(2000)
+    end
+
+    it 'assigns @total_expense_this_year' do
+      get :index, params: { user_id: user.id }
+      expect(assigns(:total_expense_this_year)).to eq(380)
+    end
+
+    it 'assigns @net_balance_this_year' do
+      get :index, params: { user_id: user.id }
+      expect(assigns(:net_balance_this_year)).to eq(1620)
+    end
+
+    it 'assigns @total_income_this_month' do
+      get :index, params: { user_id: user.id }
+      expect(assigns(:total_income_this_month)).to eq(1000)
+    end
+
+    it 'assigns @total_expense_this_month' do
+      get :index, params: { user_id: user.id }
+      expect(assigns(:total_expense_this_month)).to eq(190)
+    end
+
+    it 'assigns @net_balance_this_month' do
+      get :index, params: { user_id: user.id }
+      expect(assigns(:net_balance_this_month)).to eq(810)
     end
   end
 
