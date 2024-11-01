@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  let!(:user) { FactoryBot.build(:user) }
+  let!(:user) { build(:user) }
   let(:valid_user_params) do
     {
       user_name: user.user_name,

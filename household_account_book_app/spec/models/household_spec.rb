@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Household, type: :model do
-  let(:user) { FactoryBot.create(:user) }
-  let(:category) { FactoryBot.build(:category, user:) }
-  let(:household) { FactoryBot.build(:household, user:, category:) }
+  let(:user) { create(:user) }
+  let(:category) { build(:category, user:) }
+  let(:household) { build(:household, user:, category:) }
 
   describe 'validations' do
     it 'is valid with valid attributes' do
@@ -37,23 +37,23 @@ RSpec.describe Household, type: :model do
 
   describe 'scopes' do
     before do
-      FactoryBot.create(:household, transaction_type: 0, date: Time.current, amount: 4000, user:,
+      create(:household, transaction_type: 0, date: Time.current, amount: 4000, user:,
                                     category:)
-      FactoryBot.create(:household, transaction_type: 1, date: Time.current, amount: 1000, user:,
+      create(:household, transaction_type: 1, date: Time.current, amount: 1000, user:,
                                     category:)
-      FactoryBot.create(:household, transaction_type: 2, date: Time.current, amount: 2000, user:,
+      create(:household, transaction_type: 2, date: Time.current, amount: 2000, user:,
                                     category:)
-      FactoryBot.create(:household, transaction_type: 0, date: Time.current.prev_year, amount: 400, user:,
+      create(:household, transaction_type: 0, date: Time.current.prev_year, amount: 400, user:,
                                     category:)
-      FactoryBot.create(:household, transaction_type: 1, date: Time.current.prev_year, amount: 100, user:,
+      create(:household, transaction_type: 1, date: Time.current.prev_year, amount: 100, user:,
                                     category:)
-      FactoryBot.create(:household, transaction_type: 2, date: Time.current.prev_year, amount: 200, user:,
+      create(:household, transaction_type: 2, date: Time.current.prev_year, amount: 200, user:,
                                     category:)
-      FactoryBot.create(:household, transaction_type: 0, date: Time.current.prev_month, amount: 40, user:,
+      create(:household, transaction_type: 0, date: Time.current.prev_month, amount: 40, user:,
                                     category:)
-      FactoryBot.create(:household, transaction_type: 1, date: Time.current.prev_month, amount: 10, user:,
+      create(:household, transaction_type: 1, date: Time.current.prev_month, amount: 10, user:,
                                     category:)
-      FactoryBot.create(:household, transaction_type: 2, date: Time.current.prev_month, amount: 20, user:,
+      create(:household, transaction_type: 2, date: Time.current.prev_month, amount: 20, user:,
                                     category:)
     end
 
