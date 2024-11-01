@@ -20,12 +20,15 @@ RSpec.describe HouseholdsController, type: :controller do
 
   describe 'GET #index' do
     before do
-      FactoryBot.create(:household, transaction_type: 0, date: Time.current, amount: 1000, user: user, category: category)
-      FactoryBot.create(:household, transaction_type: 1, date: Time.current, amount: 100, user: user, category: category)
-      FactoryBot.create(:household, transaction_type: 2, date: Time.current, amount: 90, user: user, category: category)
-      FactoryBot.create(:household, transaction_type: 0, date: 1.month.ago, amount: 1000, user: user, category: category)
-      FactoryBot.create(:household, transaction_type: 1, date: 1.month.ago, amount: 100, user: user, category: category)
-      FactoryBot.create(:household, transaction_type: 2, date: 1.month.ago, amount: 90, user: user, category: category)
+      FactoryBot.create(:household, transaction_type: 0, date: Time.current, amount: 1000, user:,
+                                    category:)
+      FactoryBot.create(:household, transaction_type: 1, date: Time.current, amount: 100, user:,
+                                    category:)
+      FactoryBot.create(:household, transaction_type: 2, date: Time.current, amount: 90, user:, category:)
+      FactoryBot.create(:household, transaction_type: 0, date: 1.month.ago, amount: 1000, user:,
+                                    category:)
+      FactoryBot.create(:household, transaction_type: 1, date: 1.month.ago, amount: 100, user:, category:)
+      FactoryBot.create(:household, transaction_type: 2, date: 1.month.ago, amount: 90, user:, category:)
     end
 
     it 'assigns a new Household to @household' do

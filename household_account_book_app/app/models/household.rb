@@ -8,8 +8,8 @@ class Household < ApplicationRecord
   validates :transaction_type, presence: true
   validates :amount, presence: true
 
-  scope :this_year, -> { where(date: Date.current.beginning_of_year..Date.current.end_of_year) }
-  scope :this_month, -> { where(date: Date.current.beginning_of_month..Date.current.end_of_month) } 
+  scope :this_year, -> { where(date: Date.current.all_year) }
+  scope :this_month, -> { where(date: Date.current.all_month) }
   scope :income, -> { where(transaction_type: 0) }
   scope :expense, -> { where(transaction_type: [1, 2]) }
 

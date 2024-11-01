@@ -5,9 +5,15 @@ RSpec.describe Household, type: :model do
 
   let(:user) { FactoryBot.create(:user) }
   let(:category) { FactoryBot.build(:category, user:) }
-  let(:income_record) { FactoryBot.create(:household, transaction_type: 0, user: user, name: 'Income', category: category) }
-  let(:fixed_expense_record) { FactoryBot.create(:household, transaction_type: 1, user: user, name: 'Fixed Expense', category: category) }
-  let(:variable_expense_record) { FactoryBot.create(:household, transaction_type: 2, user: user, name: 'Variable Expense', category: category) }
+  let(:income_record) do
+    FactoryBot.create(:household, transaction_type: 0, user:, name: 'Income', category:)
+  end
+  let(:fixed_expense_record) do
+    FactoryBot.create(:household, transaction_type: 1, user:, name: 'Fixed Expense', category:)
+  end
+  let(:variable_expense_record) do
+    FactoryBot.create(:household, transaction_type: 2, user:, name: 'Variable Expense', category:)
+  end
 
   describe 'validations' do
     it 'is valid with valid attributes' do
@@ -38,36 +44,47 @@ RSpec.describe Household, type: :model do
       expect(subject).not_to be_valid
     end
   end
+
   describe '.this_year' do
-    let(:current_year_record) { FactoryBot.create(:household, date: Time.current, user: user, name: 'Current Year Record', category: category) }
-    let(:last_year_record) { FactoryBot.create(:household, date: 1.year.ago, user: user, name: 'Last Year Record', category: category) }
+    let(:current_year_record) do
+      FactoryBot.create(:household, date: Time.current, user:, name: 'Current Year Record', category:)
+    end
+    let(:last_year_record) do
+      FactoryBot.create(:household, date: 1.year.ago, user:, name: 'Last Year Record', category:)
+    end
 
     it 'returns records only from the current year' do
-      expect(Household.this_year).to include(current_year_record)
-      expect(Household.this_year).not_to include(last_year_record)
+      expect(described_class.this_year).to include(current_year_record)
+      expect(described_class.this_year).not_to include(last_year_record)
     end
   end
+
   describe '.this_month' do
-    let(:current_month_record) { FactoryBot.create(:household, date: Time.current, user: user, name: 'Current Month Record', category: category) }
-    let(:last_month_record) { FactoryBot.create(:household, date: 1.month.ago, user: user, name: 'Last Month Record', category: category) }
+    let(:current_month_record) do
+      FactoryBot.create(:household, date: Time.current, user:, name: 'Current Month Record', category:)
+    end
+    let(:last_month_record) do
+      FactoryBot.create(:household, date: 1.month.ago, user:, name: 'Last Month Record', category:)
+    end
 
     it 'returns records only from the current month' do
-      expect(Household.this_month).to include(current_month_record)
-      expect(Household.this_month).not_to include(last_month_record)
+      expect(described_class.this_month).to include(current_month_record)
+      expect(described_class.this_month).not_to include(last_month_record)
     end
   end
 
   describe '.income' do
     it 'includes records with transaction_type 0 only' do
-      expect(Household.income).to include(income_record)
-      expect(Household.income).not_to include(fixed_expense_record)
-      expect(Household.income).not_to include(variable_expense_record)
+      expect(described_class.income).to include(income_record)
+      expect(described_class.income).not_to include(fixed_expense_record)
+      expect(described_class.income).not_to include(variable_expense_record)
     end
   end
+
   describe '.expense' do
     it 'includes records with transaction_type 1 and 2 only' do
-      expect(Household.expense).to include(fixed_expense_record, variable_expense_record)
-      expect(Household.expense).not_to include(income_record)
+      expect(described_class.expense).to include(fixed_expense_record, variable_expense_record)
+      expect(described_class.expense).not_to include(income_record)
     end
   end
 end
