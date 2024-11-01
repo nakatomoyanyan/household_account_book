@@ -8,32 +8,40 @@ class Household < ApplicationRecord
   validates :transaction_type, presence: true
   validates :amount, presence: true
 
-  scope :this_year, -> { where(date: Date.current.all_year) }
-  scope :this_month, -> { where(date: Date.current.all_month) }
-  scope :income, -> { where(transaction_type: 0) }
-  scope :expense, -> { where(transaction_type: [1, 2]) }
+  scope :total_income_this_year, lambda {
+    where(transaction_type: 0, date: Time.current.all_year)
+      .sum(:amount)
+  }
+  scope :total_expense_this_year, lambda {
+    where(transaction_type: [1, 2], date: Time.current.all_year)
+      .sum(:amount)
+  }
+  scope :total_income_this_month, lambda {
+    where(transaction_type: 0, date: Time.current.all_month)
+      .sum(:amount)
+  }
+  scope :total_expense_this_month, lambda {
+    where(transaction_type: [1, 2], date: Time.current.all_month)
+      .sum(:amount)
+  }
 
-  def self.total_income_this_year
-    this_year.income.sum(:amount)
+  def self.financial_summary_this_year
+    total_income = total_income_this_year
+    total_expense = total_expense_this_year
+    {
+      total_income:,
+      total_expense:,
+      net_balance: total_income - total_expense
+    }
   end
 
-  def self.total_expense_this_year
-    this_year.expense.sum(:amount)
-  end
-
-  def self.net_balance_this_year
-    total_income_this_year - total_expense_this_year
-  end
-
-  def self.total_income_this_month
-    this_month.income.sum(:amount)
-  end
-
-  def self.total_expense_this_month
-    this_month.expense.sum(:amount)
-  end
-
-  def self.net_balance_this_month
-    total_income_this_month - total_expense_this_month
+  def self.financial_summary_this_month
+    total_income = total_income_this_month
+    total_expense = total_expense_this_month
+    {
+      total_income:,
+      total_expense:,
+      net_balance: total_income - total_expense
+    }
   end
 end

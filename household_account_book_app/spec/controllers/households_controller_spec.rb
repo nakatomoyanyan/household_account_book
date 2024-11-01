@@ -36,34 +36,34 @@ RSpec.describe HouseholdsController, type: :controller do
       expect(assigns(:household)).to be_a_new(Household)
     end
 
-    it 'assigns @total_income_this_year' do
+    it 'assigns @financial_summary_this_year[:total_income]' do
       get :index, params: { user_id: user.id }
-      expect(assigns(:total_income_this_year)).to eq(2000)
+      expect(Household.financial_summary_this_year[:total_income]).to eq(2000)
     end
 
-    it 'assigns @total_expense_this_year' do
+    it 'assigns @financial_summary_this_year[:total_expense]' do
       get :index, params: { user_id: user.id }
-      expect(assigns(:total_expense_this_year)).to eq(380)
+      expect(Household.financial_summary_this_year[:total_expense]).to eq(380)
     end
 
-    it 'assigns @net_balance_this_year' do
+    it 'assigns @financial_summary_this_year[:net_balance]' do
       get :index, params: { user_id: user.id }
-      expect(assigns(:net_balance_this_year)).to eq(1620)
+      expect(Household.financial_summary_this_year[:net_balance]).to eq(1620)
     end
 
-    it 'assigns @total_income_this_month' do
+    it 'assigns @financial_summary_this_month[:total_income]' do
       get :index, params: { user_id: user.id }
-      expect(assigns(:total_income_this_month)).to eq(1000)
+      expect(Household.financial_summary_this_month[:total_income]).to eq(1000)
     end
 
-    it 'assigns @total_expense_this_month' do
+    it 'assigns @financial_summary_this_month[:total_expense]' do
       get :index, params: { user_id: user.id }
-      expect(assigns(:total_expense_this_month)).to eq(190)
+      expect(Household.financial_summary_this_month[:total_expense]).to eq(190)
     end
 
-    it 'assigns @net_balance_this_month' do
+    it 'assigns @financial_summary_this_month[:net_balance]' do
       get :index, params: { user_id: user.id }
-      expect(assigns(:net_balance_this_month)).to eq(810)
+      expect(Household.financial_summary_this_month[:net_balance]).to eq(810)
     end
   end
 

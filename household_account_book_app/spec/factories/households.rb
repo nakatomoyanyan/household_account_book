@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :household do
-    user 
+    user
     date { Time.current }
     name { 'testhousehold' }
     transaction_type { 1 }
