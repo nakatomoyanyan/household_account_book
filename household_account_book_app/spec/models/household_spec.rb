@@ -38,23 +38,23 @@ RSpec.describe Household, type: :model do
   describe 'scopes' do
     before do
       create(:household, transaction_type: 0, date: Time.current, amount: 4000, user:,
-                                    category:)
+                         category:)
       create(:household, transaction_type: 1, date: Time.current, amount: 1000, user:,
-                                    category:)
+                         category:)
       create(:household, transaction_type: 2, date: Time.current, amount: 2000, user:,
-                                    category:)
+                         category:)
       create(:household, transaction_type: 0, date: Time.current.prev_year, amount: 400, user:,
-                                    category:)
+                         category:)
       create(:household, transaction_type: 1, date: Time.current.prev_year, amount: 100, user:,
-                                    category:)
+                         category:)
       create(:household, transaction_type: 2, date: Time.current.prev_year, amount: 200, user:,
-                                    category:)
+                         category:)
       create(:household, transaction_type: 0, date: Time.current.prev_month, amount: 40, user:,
-                                    category:)
+                         category:)
       create(:household, transaction_type: 1, date: Time.current.prev_month, amount: 10, user:,
-                                    category:)
+                         category:)
       create(:household, transaction_type: 2, date: Time.current.prev_month, amount: 20, user:,
-                                    category:)
+                         category:)
     end
 
     it 'returns the total income amount from the current year when .total_income_this_year' do
