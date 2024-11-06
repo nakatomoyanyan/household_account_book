@@ -17,6 +17,8 @@ class HouseholdsController < ApplicationController
     end
   end
 
+  def income; end
+
   private
 
   def household_params
