@@ -58,19 +58,19 @@ RSpec.describe Household, type: :model do
     end
 
     it 'returns the total income amount from the current year when .total_income_this_year' do
-      expect(described_class.total_income_this_year).to eq(4040)
+      expect(described_class.total_income_this_year.sum(:amount)).to eq(4040)
     end
 
     it 'returns the total expense amount from the current year when .total_expense_this_year' do
-      expect(described_class.total_expense_this_year).to eq(3030)
+      expect(described_class.total_expense_this_year.sum(:amount)).to eq(3030)
     end
 
     it 'returns the total income amount from the current month when .total_income_this_month' do
-      expect(described_class.total_income_this_month).to eq(4000)
+      expect(described_class.total_income_this_month.sum(:amount)).to eq(4000)
     end
 
     it 'returns the total expense amount from the current month when .total_expense_this_month' do
-      expect(described_class.total_expense_this_month).to eq(3000)
+      expect(described_class.total_expense_this_month.sum(:amount)).to eq(3000)
     end
   end
 end
