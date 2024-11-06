@@ -24,15 +24,15 @@
                     <h1>今月の収支</h1>
                     <div class="income">
                         <p>収入</p>
-                        <p><%= number_to_currency(@financial_summary_this_month[:total_income])%></p>
+                        <p><%= number_to_currency(@financial_summary_this_month.total_income)%></p>
                     </div>
                     <div class="expense">
                         <p>支出</p>
-                        <p><%= number_to_currency(@financial_summary_this_month[:total_expense])%></p>
+                        <p><%= number_to_currency(@financial_summary_this_month.total_expense)%></p>
                     </div>
                     <div class="net">
                         <p>計</p>
-                        <p><%= number_to_currency(@financial_summary_this_month[:net_balance])%></p>
+                        <p><%= number_to_currency(@financial_summary_this_month.net_balance)%></p>
                     </div>
                 </div>
                 <div class="easy-form">
