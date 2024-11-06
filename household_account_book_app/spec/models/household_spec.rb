@@ -1,38 +1,76 @@
 require 'rails_helper'
 
 RSpec.describe Household, type: :model do
-  subject { described_class.new(user:, category:) }
-
-  let(:user) { FactoryBot.create(:user) }
-  let(:category) { FactoryBot.build(:category, user:) }
+  let(:user) { create(:user) }
+  let(:category) { build(:category, user:) }
+  let(:household) { build(:household, user:, category:) }
 
   describe 'validations' do
     it 'is valid with valid attributes' do
-      subject.name = 'food'
-      subject.date = Time.zone.today
-      subject.transaction_type = :income
-      subject.amount = 1000
-      expect(subject).to be_valid
+      household.name = 'food'
+      household.date = Time.zone.today
+      household.transaction_type = :income
+      household.amount = 1000
+      expect(household).to be_valid
     end
 
     it 'is not valid without a date' do
-      subject.date = nil
-      expect(subject).not_to be_valid
+      household.date = nil
+      expect(household).not_to be_valid
     end
 
     it 'is not valid without a transaction type' do
-      subject.transaction_type = nil
-      expect(subject).not_to be_valid
+      household.transaction_type = nil
+      expect(household).not_to be_valid
     end
 
     it 'is not valid without an amount' do
-      subject.amount = nil
-      expect(subject).not_to be_valid
+      household.amount = nil
+      expect(household).not_to be_valid
     end
 
     it 'is not valid with a name longer than 20 characters' do
-      subject.name = 'A' * 21
-      expect(subject).not_to be_valid
+      household.name = 'A' * 21
+      expect(household).not_to be_valid
+    end
+  end
+
+  describe 'scopes' do
+    before do
+      create(:household, transaction_type: 0, date: Time.current, amount: 4000, user:,
+                         category:)
+      create(:household, transaction_type: 1, date: Time.current, amount: 1000, user:,
+                         category:)
+      create(:household, transaction_type: 2, date: Time.current, amount: 2000, user:,
+                         category:)
+      create(:household, transaction_type: 0, date: Time.current.prev_year, amount: 400, user:,
+                         category:)
+      create(:household, transaction_type: 1, date: Time.current.prev_year, amount: 100, user:,
+                         category:)
+      create(:household, transaction_type: 2, date: Time.current.prev_year, amount: 200, user:,
+                         category:)
+      create(:household, transaction_type: 0, date: Time.current.prev_month, amount: 40, user:,
+                         category:)
+      create(:household, transaction_type: 1, date: Time.current.prev_month, amount: 10, user:,
+                         category:)
+      create(:household, transaction_type: 2, date: Time.current.prev_month, amount: 20, user:,
+                         category:)
+    end
+
+    it 'returns the total income amount from the current year when .total_income_this_year' do
+      expect(described_class.total_income_this_year).to eq(4040)
+    end
+
+    it 'returns the total expense amount from the current year when .total_expense_this_year' do
+      expect(described_class.total_expense_this_year).to eq(3030)
+    end
+
+    it 'returns the total income amount from the current month when .total_income_this_month' do
+      expect(described_class.total_income_this_month).to eq(4000)
+    end
+
+    it 'returns the total expense amount from the current month when .total_expense_this_month' do
+      expect(described_class.total_expense_this_month).to eq(3000)
     end
   end
 end

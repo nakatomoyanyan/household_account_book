@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe CategoriesController, type: :controller do
-  let(:user) { FactoryBot.create(:user, email: 'user1@example.com') }
-  let(:other_user) { FactoryBot.create(:user, email: 'user2@example.com') }
-  let(:category) { FactoryBot.create(:category, user:) }
+  let(:user) { create(:user, email: 'user1@example.com') }
+  let(:other_user) { create(:user, email: 'user2@example.com') }
+  let(:category) { create(:category, user:) }
 
   before do
     allow(controller).to receive(:current_user).and_return(user)

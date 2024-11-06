@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Category, type: :model do
-  let(:user) { FactoryBot.create(:user) }
-  let(:category) { FactoryBot.build(:category, user:) }
+  let(:user) { create(:user) }
+  let(:category) { build(:category, user:) }
 
   describe 'validations' do
     it 'is valid with a name and user' do

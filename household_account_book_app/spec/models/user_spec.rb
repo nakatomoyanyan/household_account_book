@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  let(:valid_user) { FactoryBot.build(:user) }
+  let(:valid_user) { build(:user) }
 
   describe 'validations' do
     it 'is valid with valid attributes' do
@@ -24,7 +24,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'is not valid if the email is not unique' do
-      FactoryBot.create(:user, email: 'test@example.com')
+      create(:user, email: 'test@example.com')
       valid_user.email = 'test@example.com'
       expect(valid_user).not_to be_valid
     end

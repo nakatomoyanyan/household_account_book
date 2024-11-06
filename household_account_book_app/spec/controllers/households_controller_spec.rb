@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe HouseholdsController, type: :controller do
-  let(:user) { FactoryBot.create(:user, email: 'user1@example.com') }
-  let(:other_user) { FactoryBot.create(:user, email: 'user2@example.com') }
-  let(:category) { FactoryBot.create(:category, user:) }
+  let(:user) { create(:user, email: 'user1@example.com') }
+  let(:other_user) { create(:user, email: 'user2@example.com') }
+  let(:category) { create(:category, user:) }
   let(:valid_attributes) do
     {
       name: 'food',
@@ -19,9 +19,51 @@ RSpec.describe HouseholdsController, type: :controller do
   end
 
   describe 'GET #index' do
+    before do
+      create(:household, transaction_type: 0, date: Time.current, amount: 1000, user:,
+                         category:)
+      create(:household, transaction_type: 1, date: Time.current, amount: 100, user:,
+                         category:)
+      create(:household, transaction_type: 2, date: Time.current, amount: 90, user:, category:)
+      create(:household, transaction_type: 0, date: 1.month.ago, amount: 1000, user:,
+                         category:)
+      create(:household, transaction_type: 1, date: 1.month.ago, amount: 100, user:, category:)
+      create(:household, transaction_type: 2, date: 1.month.ago, amount: 90, user:, category:)
+    end
+
     it 'assigns a new Household to @household' do
       get :index, params: { user_id: user.id }
       expect(assigns(:household)).to be_a_new(Household)
+    end
+
+    it 'assigns @financial_summary_this_year[:total_income]' do
+      get :index, params: { user_id: user.id }
+      expect(Household.financial_summary_this_year[:total_income]).to eq(2000)
+    end
+
+    it 'assigns @financial_summary_this_year[:total_expense]' do
+      get :index, params: { user_id: user.id }
+      expect(Household.financial_summary_this_year[:total_expense]).to eq(380)
+    end
+
+    it 'assigns @financial_summary_this_year[:net_balance]' do
+      get :index, params: { user_id: user.id }
+      expect(Household.financial_summary_this_year[:net_balance]).to eq(1620)
+    end
+
+    it 'assigns @financial_summary_this_month[:total_income]' do
+      get :index, params: { user_id: user.id }
+      expect(Household.financial_summary_this_month[:total_income]).to eq(1000)
+    end
+
+    it 'assigns @financial_summary_this_month[:total_expense]' do
+      get :index, params: { user_id: user.id }
+      expect(Household.financial_summary_this_month[:total_expense]).to eq(190)
+    end
+
+    it 'assigns @financial_summary_this_month[:net_balance]' do
+      get :index, params: { user_id: user.id }
+      expect(Household.financial_summary_this_month[:net_balance]).to eq(810)
     end
   end
 
