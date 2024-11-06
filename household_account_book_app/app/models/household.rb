@@ -25,23 +25,19 @@ class Household < ApplicationRecord
       .sum(:amount)
   }
 
+  FinancialSummaryStruct = Struct.new(:total_income, :total_expense, :net_balance)
+
   def self.financial_summary_this_year
     total_income = total_income_this_year
     total_expense = total_expense_this_year
-    {
-      total_income:,
-      total_expense:,
-      net_balance: total_income - total_expense
-    }
+    net_balance = total_income - total_expense
+    FinancialSummaryStruct.new(total_income:, total_expense:, net_balance:)
   end
 
   def self.financial_summary_this_month
     total_income = total_income_this_month
     total_expense = total_expense_this_month
-    {
-      total_income:,
-      total_expense:,
-      net_balance: total_income - total_expense
-    }
+    net_balance = total_income - total_expense
+    FinancialSummaryStruct.new(total_income:, total_expense:, net_balance:)
   end
 end
