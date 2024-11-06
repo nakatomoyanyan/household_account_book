@@ -19,6 +19,10 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy"
   resources :users do
     resources :categories
-    resources :households
+    resources :households do
+      collection do
+        get :income
+      end
+    end
   end
 end
