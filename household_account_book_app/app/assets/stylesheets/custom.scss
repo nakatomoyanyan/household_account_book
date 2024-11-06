@@ -269,11 +269,22 @@ header {
     }
   }
   .index-income {
+    display: flex;
+    float: left;
+    flex-direction: column;
     border: 3px solid black;
     border-radius: 10px;
     width: 100%;
-    height: 300px;
     margin-top: 10px;
+    .income {
+      display: flex;
+      float: left;
+      justify-content: center;
+      font-size: 30px;
+      p {
+        padding-left: 80px;
+      }
+    }
   }
 }
 

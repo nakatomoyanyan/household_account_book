@@ -17,7 +17,9 @@ class HouseholdsController < ApplicationController
     end
   end
 
-  def income; end
+  def income
+    @index_income_this_year = Household.index_income_this_year
+  end
 
   private
 

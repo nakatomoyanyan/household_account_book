@@ -11,7 +11,14 @@
                 </div>
             </div>
             <div class="index-income">
-                <h1>2</h1>
+                <h1>今年の収入一覧</h1>
+                <% @index_income_this_year.each do |income| %>
+                <div class="income">
+                    <p><%= income.date%></p>
+                    <p><%= income.name%></p>
+                    <p><%= income.amount%>円</p>
+                </div>
+                <% end %>
             </div>
         </div>
     </div>
