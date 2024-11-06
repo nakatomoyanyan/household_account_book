@@ -8,7 +8,7 @@
                 <%= link_to "home", user_households_path(current_user), method: :get, class:"home-button" %>
             </div>
             <div class="income">
-                収入
+                <%= link_to "収入", income_user_households_path(current_user), method: :get, class:"income-button" %>
             </div>
             <div class="expense">
                 支出
