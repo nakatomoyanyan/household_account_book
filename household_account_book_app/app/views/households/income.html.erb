@@ -16,7 +16,7 @@
                 <div class="income">
                     <p><%= income.date%></p>
                     <p><%= income.name%></p>
-                    <p><%= income.amount%>円</p>
+                    <p><%= number_to_currency(income.amount)%></p>
                 </div>
                 <% end %>
             </div>
