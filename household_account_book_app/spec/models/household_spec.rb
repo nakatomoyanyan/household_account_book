@@ -35,42 +35,59 @@ RSpec.describe Household, type: :model do
     end
   end
 
+  let(:income_this_year) do
+    create(:household, transaction_type: 0, date: Time.current, amount: 4000, user:,
+                        category:)
+  end
+  let(:fixed_expense_this_year) do
+    create(:household, transaction_type: 1, date: Time.current, amount: 1000, user:,
+                        category:)
+  end
+  let(:variable_expense_this_year) do
+    create(:household, transaction_type: 2, date: Time.current, amount: 2000, user:,
+                        category:)
+  end
+  let(:income_last_year) do
+    create(:household, transaction_type: 0, date: Time.current.prev_year, amount: 400, user:,
+                        category:)
+  end
+  let(:fixed_expense_last_year) do
+    create(:household, transaction_type: 1, date: Time.current.prev_year, amount: 100, user:,
+                        category:)
+  end
+  let(:variable_expense_last_year) do
+    create(:household, transaction_type: 2, date: Time.current.prev_year, amount: 200, user:,
+                        category:)
+  end
+  let(:income_last_month) do
+    create(:household, transaction_type: 0, date: Time.current.prev_month, amount: 40, user:,
+                        category:)
+  end
+  let(:fixed_expense_last_month) do
+    create(:household, transaction_type: 1, date: Time.current.prev_month, amount: 10, user:,
+                        category:)
+  end
+  let(:variable_expense_last_month) do
+    create(:household, transaction_type: 2, date: Time.current.prev_month, amount: 20, user:,
+                        category:)
+  end
+
   describe 'scopes' do
-    before do
-      create(:household, transaction_type: 0, date: Time.current, amount: 4000, user:,
-                         category:)
-      create(:household, transaction_type: 1, date: Time.current, amount: 1000, user:,
-                         category:)
-      create(:household, transaction_type: 2, date: Time.current, amount: 2000, user:,
-                         category:)
-      create(:household, transaction_type: 0, date: Time.current.prev_year, amount: 400, user:,
-                         category:)
-      create(:household, transaction_type: 1, date: Time.current.prev_year, amount: 100, user:,
-                         category:)
-      create(:household, transaction_type: 2, date: Time.current.prev_year, amount: 200, user:,
-                         category:)
-      create(:household, transaction_type: 0, date: Time.current.prev_month, amount: 40, user:,
-                         category:)
-      create(:household, transaction_type: 1, date: Time.current.prev_month, amount: 10, user:,
-                         category:)
-      create(:household, transaction_type: 2, date: Time.current.prev_month, amount: 20, user:,
-                         category:)
+    it 'returns the income amount from the current year when .income_this_year' do
+      expect(described_class.income_this_year).to eq([income_this_year, income_last_month])
     end
 
-    it 'returns the total income amount from the current year when .total_income_this_year' do
-      expect(described_class.total_income_this_year.sum(:amount)).to eq(4040)
+    it 'returns the expense amount from the current year when .expense_this_year' do
+      expect(described_class.expense_this_year).to eq([fixed_expense_this_year, variable_expense_this_year,
+                                                      fixed_expense_last_month, variable_expense_last_month])
     end
 
-    it 'returns the total expense amount from the current year when .total_expense_this_year' do
-      expect(described_class.total_expense_this_year.sum(:amount)).to eq(3030)
+    it 'returns the income amount from the current month when .income_this_month' do
+      expect(described_class.income_this_month).to eq([income_this_year])
     end
 
-    it 'returns the total income amount from the current month when .total_income_this_month' do
-      expect(described_class.total_income_this_month.sum(:amount)).to eq(4000)
-    end
-
-    it 'returns the total expense amount from the current month when .total_expense_this_month' do
-      expect(described_class.total_expense_this_month.sum(:amount)).to eq(3000)
+    it 'returns the expense amount from the current month when .expense_this_month' do
+      expect(described_class.expense_this_month).to eq([fixed_expense_this_year, variable_expense_this_year])
     end
   end
 end
