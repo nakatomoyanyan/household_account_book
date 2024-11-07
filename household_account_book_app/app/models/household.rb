@@ -36,8 +36,4 @@ class Household < ApplicationRecord
     net_balance = total_income - total_expense
     FinancialSummaryStruct.new(total_income:, total_expense:, net_balance:)
   end
-
-  def self.index_income_this_year
-    income_this_year
-  end
 end
