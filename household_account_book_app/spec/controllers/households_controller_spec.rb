@@ -106,4 +106,11 @@ RSpec.describe HouseholdsController, type: :controller do
       end
     end
   end
+
+  describe 'get #income' do
+    it 'assigns a new index_income_this_year' do
+      get :income, params: { user_id: user.id }
+      expect(assigns(:incomes_this_year)).to eq(user.households.income.this_year)
+    end
+  end
 end

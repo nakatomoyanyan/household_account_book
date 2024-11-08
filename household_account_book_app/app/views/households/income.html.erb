@@ -1,0 +1,25 @@
+<% provide(:title, "Income") %>
+<body>
+    <div class="container">
+        <div class="income-page">
+            <div class="grath">
+                <div class="grath-income-this-year">
+                    <h1>今年の収入のグラフ</h1>
+                </div>
+                <div class="grath-income-this-month">
+                    <h1>今月の収入のグラフ</h1>
+                </div>
+            </div>
+            <div class="index-income">
+                <h1>今年の収入一覧</h1>
+                <% @incomes_this_year.each do |income| %>
+                <div class="income">
+                    <p><%= income.date%></p>
+                    <p><%= income.name%></p>
+                    <p><%= number_to_currency(income.amount)%></p>
+                </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</body>

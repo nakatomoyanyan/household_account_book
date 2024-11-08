@@ -8,35 +8,31 @@ class Household < ApplicationRecord
   validates :transaction_type, presence: true
   validates :amount, presence: true
 
-  scope :total_income_this_year, lambda {
-    where(transaction_type: 0, date: Time.current.all_year)
-      .sum(:amount)
+  scope :income, lambda {
+    where(transaction_type: 0)
   }
-  scope :total_expense_this_year, lambda {
-    where(transaction_type: [1, 2], date: Time.current.all_year)
-      .sum(:amount)
+  scope :expense, lambda {
+    where(transaction_type: [1, 2])
   }
-  scope :total_income_this_month, lambda {
-    where(transaction_type: 0, date: Time.current.all_month)
-      .sum(:amount)
+  scope :this_year, lambda {
+    where(date: Time.current.all_year)
   }
-  scope :total_expense_this_month, lambda {
-    where(transaction_type: [1, 2], date: Time.current.all_month)
-      .sum(:amount)
+  scope :this_month, lambda {
+    where(date: Time.current.all_month)
   }
 
   FinancialSummaryStruct = Struct.new(:total_income, :total_expense, :net_balance)
 
   def self.financial_summary_this_year
-    total_income = total_income_this_year
-    total_expense = total_expense_this_year
+    total_income = income.this_year.sum(:amount)
+    total_expense = expense.this_year.sum(:amount)
     net_balance = total_income - total_expense
     FinancialSummaryStruct.new(total_income:, total_expense:, net_balance:)
   end
 
   def self.financial_summary_this_month
-    total_income = total_income_this_month
-    total_expense = total_expense_this_month
+    total_income = income.this_month.sum(:amount)
+    total_expense = expense.this_month.sum(:amount)
     net_balance = total_income - total_expense
     FinancialSummaryStruct.new(total_income:, total_expense:, net_balance:)
   end
