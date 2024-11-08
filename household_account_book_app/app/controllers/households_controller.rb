@@ -19,6 +19,7 @@ class HouseholdsController < ApplicationController
 
   def income
     @incomes_this_year = current_user.households.income.this_year
+    @income_data_this_year = current_user.households.income.this_year.group_by_month(:date, format: '%B').sum(:amount)
   end
 
   private
