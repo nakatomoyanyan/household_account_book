@@ -112,10 +112,13 @@ RSpec.describe HouseholdsController, type: :controller do
       get :income, params: { user_id: user.id }
       expect(assigns(:incomes_this_year)).to eq(user.households.income.this_year)
     end
+
     it 'assigns a new incomes_grath_data_this_year' do
       get :income, params: { user_id: user.id }
-      expect(assigns(:incomes_grath_data_this_year)).to eq(user.households.income.this_year.group_by_month(:date, format: '%B').sum(:amount))
+      expect(assigns(:incomes_grath_data_this_year)).to eq(user.households.income.this_year.group_by_month(:date,
+                                                                                                           format: '%B').sum(:amount))
     end
+
     it 'assigns a new incomes_grath_data_this_month' do
       get :income, params: { user_id: user.id }
       expect(assigns(:incomes_grath_data_this_month)).to eq(user.households.income.this_month.group(:name).sum(:amount))
