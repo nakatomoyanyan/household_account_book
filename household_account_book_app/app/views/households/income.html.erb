@@ -5,11 +5,11 @@
             <div class="grath">
                 <div class="grath-income-this-year">
                     <h1>今年の収入のグラフ</h1>
-                    <%= column_chart @income_data_this_year, xtitle: "月", ytitle: "収入", height: "300px" %>
+                    <%= column_chart @incomes_grath_data_this_year, xtitle: "月", ytitle: "収入", height: "300px" %>
                 </div>
                 <div class="grath-income-this-month">
                     <h1>今月の収入のグラフ</h1>
-                                        <%= pie_chart @income_data_this_month, height: "300px" %>
+                                        <%= pie_chart @incomes_grath_data_this_month, height: "300px" %>
                 </div>
             </div>
             <div class="index-income">
