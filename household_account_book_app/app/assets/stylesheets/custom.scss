@@ -40,6 +40,10 @@ header {
     }
     .expense {
       padding-right: 30px;
+      .income-button {
+        color: inherit;
+        text-decoration: none;
+      }
     }
     .signout {
       padding-right: 30px;

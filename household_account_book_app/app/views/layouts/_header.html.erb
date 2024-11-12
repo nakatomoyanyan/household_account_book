@@ -11,7 +11,7 @@
                 <%= link_to "収入", income_user_households_path(current_user), method: :get, class:"income-button" %>
             </div>
             <div class="expense">
-                支出
+                <%= link_to "支出", expense_user_households_path(current_user), method: :get, class:"income-button" %>
             </div>
             <div class="signout">
                 <%= link_to "SignOut", logout_path, data: { turbo_method: :delete }, class:"signout-button" %>
