@@ -25,6 +25,8 @@ class HouseholdsController < ApplicationController
   end
 
   def expense
+    expenses = current_user.households.expense
+    @expenses_this_year = expenses.this_year
   end
 
   private
