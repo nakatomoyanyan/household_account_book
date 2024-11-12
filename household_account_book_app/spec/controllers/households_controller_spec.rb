@@ -124,4 +124,11 @@ RSpec.describe HouseholdsController, type: :controller do
       expect(assigns(:incomes_grath_data_this_month)).to eq(user.households.income.this_month.group(:name).sum(:amount))
     end
   end
+
+  describe 'get #expense' do
+    it 'assigns a new expenses_this_year' do
+      get :expense, params: { user_id: user.id }
+      expect(assigns(:expenses_this_year)).to eq(user.households.expense.this_year)
+    end
+  end
 end
