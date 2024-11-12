@@ -24,6 +24,9 @@ class HouseholdsController < ApplicationController
     @incomes_grath_data_this_month = incomes.this_month.group(:name).sum(:amount)
   end
 
+  def expense
+  end
+
   private
 
   def household_params
