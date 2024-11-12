@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     resources :households do
       collection do
         get :income
+        get :expense
       end
     end
   end
