@@ -22,7 +22,7 @@
                 <div class="expense">
                     <p><%= expense.date%></p>
                     <p><%= expense.name%></p>
-                    <p><%= transaction_type_label(expense.transaction_type)%></p>
+                    <p><%= expense.transaction_type_in_japanese%></p>
                     <p><%= number_to_currency(expense.amount)%></p>
                 </div>
                 <% end %>
