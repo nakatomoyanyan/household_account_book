@@ -26,7 +26,7 @@ RSpec.describe UsersController, type: :controller do
     it 'redirects to the home page' do
       post :create, params: { user: valid_user_params }
       user = User.last
-      expect(response).to redirect_to(user_households_path(user))
+      expect(response).to redirect_to(households_path(user))
     end
 
     it 'sign in as a user' do

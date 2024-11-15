@@ -2,19 +2,14 @@ module UserResourceConcern
   extend ActiveSupport::Concern
 
   included do
-    before_action :authorize_user
+    before_action :require_login
   end
 
   private
 
-  def user
-    @user ||= User.find(params[:user_id])
-  end
+  def require_login
+    return if current_user
 
-  def authorize_user
-    return if user == current_user
-
-    flash[:notice] = 'アクセス権限がありません'
-    redirect_to root_path
+    redirect_to root_path, notice: 'ログインしてください'
   end
 end

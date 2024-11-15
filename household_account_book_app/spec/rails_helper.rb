@@ -70,5 +70,6 @@ RSpec.configure do |config|
     config.include Rails::Controller::Testing::Integration
     config.include Rails::Controller::Testing::TemplateAssertions, type: :controller
     config.include FactoryBot::Syntax::Methods
+    config.include Sorcery::TestHelpers::Rails::Controller
   end
 end

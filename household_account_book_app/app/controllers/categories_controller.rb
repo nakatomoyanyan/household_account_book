@@ -1,25 +1,25 @@
 class CategoriesController < ApplicationController
   include UserResourceConcern
   def new
-    @category = user.categories.new
-    @categories = user.categories.all
+    @category = current_user.categories.new
+    @categories = current_user.categories.all
   end
 
   def create
-    @category = user.categories.new(category_params)
+    @category = current_user.categories.new(category_params)
 
     flash[:notice] = if @category.save
                        '登録に成功しました'
                      else
                        '登録に失敗しました'
                      end
-    redirect_to user_categories_path(user)
+    redirect_to categories_path(current_user)
   end
 
   def destroy
     category.destroy
     flash[:notice] = '名目が削除されました'
-    redirect_to user_categories_path(user)
+    redirect_to categories_path(current_user)
   end
 
   private

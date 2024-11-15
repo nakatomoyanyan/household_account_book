@@ -9,7 +9,7 @@
                     <% @categories.each do |category| %>
                     <div class="category">
                         <p><%= category.name%></p>
-                        <%= button_to '削除', user_category_path(@user, category), method: :delete, class: 'category-delete-button' %>
+                        <%= button_to '削除', category_path(current_user, category), method: :delete, class: 'category-delete-button' %>
                     </div>
                     <% end %>
                 </div>
