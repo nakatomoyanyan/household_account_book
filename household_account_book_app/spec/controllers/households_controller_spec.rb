@@ -71,12 +71,12 @@ RSpec.describe HouseholdsController, type: :controller do
     context 'with valid parameters' do
       it 'creates a new Household' do
         expect do
-          post :create, params: { user_id: user.id, household: valid_attributes }
+          post :create, params: { household: valid_attributes }
         end.to change(Household, :count).by(1)
       end
 
       it 'redirects to the user household index' do
-        post :create, params: { user_id: user.id, household: valid_attributes }
+        post :create, params: { household: valid_attributes }
         expect(response).to redirect_to(households_path(user))
         expect(flash[:notice]).to eq('登録に成功しました')
       end
@@ -85,12 +85,12 @@ RSpec.describe HouseholdsController, type: :controller do
     context 'with invalid parameters' do
       it 'does not create a new Household' do
         expect do
-          post :create, params: { user_id: user.id, household: { name: '', date: nil } }
+          post :create, params: { household: { name: '', date: nil } }
         end.not_to change(Household, :count)
       end
 
       it 'redirects to the user household index with an error message' do
-        post :create, params: { user_id: user.id, household: { name: '', date: nil } }
+        post :create, params: { household: { name: '', date: nil } }
         expect(flash[:notice]).to eq('登録に失敗しました')
         expect(response).to render_template('index')
         expect(response.status).to eq 422

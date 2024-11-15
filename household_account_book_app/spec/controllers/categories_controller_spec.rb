@@ -20,7 +20,7 @@ RSpec.describe CategoriesController, type: :controller do
   describe 'POST #create' do
     context 'with valid parameters' do
       it 'creates a new category and redirects to user_categories_path' do
-        post :create, params: { user_id: user.id, category: { name: 'food' } }
+        post :create, params: { category: { name: 'food' } }
         expect(user.categories.count).to eq(2)
         expect(flash[:notice]).to eq('登録に成功しました')
         expect(response).to redirect_to(categories_path(user))
@@ -29,7 +29,7 @@ RSpec.describe CategoriesController, type: :controller do
 
     context 'with invalid parameters' do
       it 'does not create a new category and redirects to user_categories_path' do
-        post :create, params: { user_id: user.id, category: { name: '' } }
+        post :create, params: { category: { name: '' } }
         expect(user.categories.count).to eq(1)
         expect(flash[:notice]).to eq('登録に失敗しました')
         expect(response).to redirect_to(categories_path(user))
@@ -39,7 +39,7 @@ RSpec.describe CategoriesController, type: :controller do
 
   describe 'DELETE #destroy' do
     it 'deletes the category and redirects to user_categories_path' do
-      delete :destroy, params: { user_id: user.id, id: category.id }
+      delete :destroy, params: { id: category.id }
       expect(user.categories).not_to exist(category.id)
       expect(flash[:notice]).to eq('名目が削除されました')
       expect(response).to redirect_to(categories_path(user))
