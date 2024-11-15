@@ -1,7 +1,7 @@
 class HouseholdsController < ApplicationController
   include UserResourceConcern
   def index
-    @household = Household.new.decorate
+    @household = Household.new
     @financial_summary_this_year = current_user.households.financial_summary_this_year
     @financial_summary_this_month = current_user.households.financial_summary_this_month
   end
