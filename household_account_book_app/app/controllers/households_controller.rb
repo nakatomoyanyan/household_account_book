@@ -25,8 +25,15 @@ class HouseholdsController < ApplicationController
   end
 
   def expense
-    expenses = current_user.households.expense
-    @expenses_this_year = expenses.this_year.decorate
+    households = current_user.households
+    @all_expenses_this_year = households.all_expense.this_year.decorate
+    @all_expenses_grath_data_this_month = households.all_expense.this_month.group(:name).sum(:amount)
+    @fixed_expenses_grath_data_this_month = households.fixed_expense.this_month.group(:name).sum(:amount)
+    @variable_expenses_grath_data_this_month = households.variable_expense.this_month.group(:name).sum(:amount)
+    fixed_expenses_data = households.fixed_expense.this_year.group_by_month(:date, format: '%B').sum(:amount)
+    variable_expenses_data = households.variable_expense.this_year.group_by_month(:date, format: '%B').sum(:amount)
+    @expenses_grath_data_this_year = [{ name: '固定費', data: fixed_expenses_data },
+                                      { name: '流動費', data: variable_expenses_data }]
   end
 
   private

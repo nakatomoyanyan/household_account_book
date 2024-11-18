@@ -5,20 +5,24 @@
             <div class="grath">
                 <div class="grath-expense-this-year">
                     <h1>今年の支出のグラフ</h1>
+                    <%= column_chart @expenses_grath_data_this_year, stacked: true %>
                 </div>
                 <div class="grath-net-expense-this-month">
                     <h1>今月の合計支出のグラフ</h1>
+                    <%= pie_chart @all_expenses_grath_data_this_month, height: "300px" %>
                 </div>
                 <div class="grath-fixed_expense-his-year">
                     <h1>今月の固定費のグラフ</h1>
+                    <%= pie_chart @fixed_expenses_grath_data_this_month, height: "300px" %>
                 </div>
                 <div class="grath-variable_expense-this-month">
                     <h1>今月の流動費のグラフ</h1>
+                    <%= pie_chart @variable_expenses_grath_data_this_month , height: "300px" %>
                 </div>
             </div>
             <div class="index-expense">
                 <h1>今年の支出一覧</h1>
-                <% @expenses_this_year.each do |expense| %>
+                <% @all_expenses_this_year.each do |expense| %>
                 <div class="expense">
                     <p><%= expense.date%></p>
                     <p><%= expense.name%></p>
