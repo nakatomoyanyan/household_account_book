@@ -123,6 +123,15 @@ RSpec.describe HouseholdsController, type: :controller do
       get :income
       expect(assigns(:incomes_grath_data_this_month)).to eq(user.households.income.this_month.group(:name).sum(:amount))
     end
+
+    describe 'require_login' do
+      it 'redirects to root path if user is not the current user' do
+        logout_user
+        get :income
+        expect(flash[:notice]).to eq('ログインしてください')
+        expect(response).to redirect_to(root_path)
+      end
+    end
   end
 
   describe 'get #expense' do
@@ -153,6 +162,15 @@ RSpec.describe HouseholdsController, type: :controller do
                                                                                          format: '%B').sum(:amount)
       expect(assigns(:expenses_grath_data_this_year)).to eq([{ name: '固定費', data: fixed_expenses_data },
                                                              { name: '流動費', data: variable_expenses_data }])
+    end
+
+    describe 'require_login' do
+      it 'redirects to root path if user is not the current user' do
+        logout_user
+        get :expense
+        expect(flash[:notice]).to eq('ログインしてください')
+        expect(response).to redirect_to(root_path)
+      end
     end
   end
 end
