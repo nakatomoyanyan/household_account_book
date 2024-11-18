@@ -128,7 +128,31 @@ RSpec.describe HouseholdsController, type: :controller do
   describe 'get #expense' do
     it 'assigns a new expenses_this_year' do
       get :expense
-      expect(assigns(:expenses_this_year)).to eq(user.households.expense.this_year)
+      expect(assigns(:all_expenses_this_year)).to eq(user.households.all_expense.this_year)
+    end
+
+    it 'assigns a new all_expenses_grath_data_this_month' do
+      get :expense
+      expect(assigns(:all_expenses_grath_data_this_month)).to eq(user.households.all_expense.this_month.group(:name).sum(:amount))
+    end
+
+    it 'assigns a new fixed_expenses_grath_data_this_month' do
+      get :expense
+      expect(assigns(:fixed_expenses_grath_data_this_month)).to eq(user.households.fixed_expense.this_month.group(:name).sum(:amount))
+    end
+
+    it 'assigns a new variable_expenses_grath_data_this_month' do
+      get :expense
+      expect(assigns(:variable_expenses_grath_data_this_month)).to eq(user.households.variable_expense.this_month.group(:name).sum(:amount))
+    end
+
+    it 'assigns a new expenses_grath_data_this_year' do
+      get :expense
+      fixed_expenses_data = user.households.fixed_expense.this_year.group_by_month(:date, format: '%B').sum(:amount)
+      variable_expenses_data = user.households.variable_expense.this_year.group_by_month(:date,
+                                                                                         format: '%B').sum(:amount)
+      expect(assigns(:expenses_grath_data_this_year)).to eq([{ name: '固定費', data: fixed_expenses_data },
+                                                             { name: '流動費', data: variable_expenses_data }])
     end
   end
 end

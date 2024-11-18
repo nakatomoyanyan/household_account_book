@@ -77,9 +77,19 @@ RSpec.describe Household, type: :model do
       expect(described_class.income).to eq([income_this_year, income_last_month, income_last_year])
     end
 
-    it 'returns the expense when .expense' do
-      expect(described_class.expense).to eq([fixed_expense_this_year, variable_expense_this_year,
-                                             fixed_expense_last_month, variable_expense_last_month, fixed_expense_last_year, variable_expense_last_year])
+    it 'returns the expense when .all_expense' do
+      expect(described_class.all_expense).to eq([fixed_expense_this_year, variable_expense_this_year,
+                                                 fixed_expense_last_month, variable_expense_last_month, fixed_expense_last_year, variable_expense_last_year])
+    end
+
+    it 'returns the expense when .fixed_expense' do
+      expect(described_class.fixed_expense).to eq([fixed_expense_this_year, fixed_expense_last_month,
+                                                   fixed_expense_last_year])
+    end
+
+    it 'returns the expense when .variable_expense' do
+      expect(described_class.variable_expense).to eq([variable_expense_this_year, variable_expense_last_month,
+                                                      variable_expense_last_year])
     end
 
     it 'returns from the current year when .this_year' do
