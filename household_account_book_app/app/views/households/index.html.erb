@@ -38,7 +38,7 @@
                 <div class="easy-form">
                     <h1>かんたん入力</h1>
                     <%= render 'shared/error_messages', object: @household %>
-                    <%= form_with model: @household, url: user_households_path(current_user) do |f| %>
+                    <%= form_with model: @household, url: households_path(current_user) do |f| %>
                         <div class="name">
                             <%= f.label :name, "登録内容名(任意)(最大20文字)", class: "form-label" %>
                             <%= f.text_field :name, class: "form-control" %>
@@ -55,10 +55,10 @@
                             <%= f.label :category_id, "名目", class: "form-label" %>
                             <%= f.collection_select :category_id, Category.where(user: current_user), :id, :name, { prompt: "選択してください" }, class: "form-control" %>                        
                         </div>
-                        <%= link_to '名目編集はこちら', new_user_category_path(current_user), method: :get, class: 'link-edit' %>
+                        <%= link_to '名目編集はこちら', new_category_path(current_user), method: :get, class: 'link-edit' %>
                         <div class="transaction_type">
                             <%= f.label :transaction_type, "分類", class: "form-label" %>
-                            <%= f.select :transaction_type, transaction_type_options, { prompt: "選択してください" }, class: "form-control" %>                        
+                            <%= f.select :transaction_type, households_transahion_type_i18n_options, { prompt: "選択してください" }, class: "form-control" %>                        
                         </div>
                         <div class="submit-button">
                             <%= f.submit "登録", class: "button"%>

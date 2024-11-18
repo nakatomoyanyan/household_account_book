@@ -5,13 +5,13 @@
         </div>
         <div class="header-container-list">
             <div class="home">
-                <%= link_to "home", user_households_path(current_user), method: :get, class:"home-button" %>
+                <%= link_to "home", households_path(current_user), method: :get, class:"home-button" %>
             </div>
             <div class="income">
-                <%= link_to "収入", income_user_households_path(current_user), method: :get, class:"income-button" %>
+                <%= link_to "収入", income_households_path(current_user), method: :get, class:"income-button" %>
             </div>
             <div class="expense">
-                支出
+                <%= link_to "支出", expense_households_path(current_user), method: :get, class:"income-button" %>
             </div>
             <div class="signout">
                 <%= link_to "SignOut", logout_path, data: { turbo_method: :delete }, class:"signout-button" %>

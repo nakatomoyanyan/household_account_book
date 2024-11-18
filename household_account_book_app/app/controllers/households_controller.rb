@@ -7,10 +7,10 @@ class HouseholdsController < ApplicationController
   end
 
   def create
-    @household = user.households.new(household_params)
+    @household = current_user.households.new(household_params)
     if @household.save
       flash[:notice] = '登録に成功しました'
-      redirect_to user_households_path(user)
+      redirect_to households_path(current_user)
     else
       flash[:notice] = '登録に失敗しました'
       render 'index', status: :unprocessable_entity
@@ -22,6 +22,11 @@ class HouseholdsController < ApplicationController
     @incomes_this_year = incomes.this_year
     @incomes_grath_data_this_year = @incomes_this_year.group_by_month(:date, format: '%B').sum(:amount)
     @incomes_grath_data_this_month = incomes.this_month.group(:name).sum(:amount)
+  end
+
+  def expense
+    expenses = current_user.households.expense
+    @expenses_this_year = expenses.this_year.decorate
   end
 
   private

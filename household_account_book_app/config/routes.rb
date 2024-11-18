@@ -17,12 +17,12 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
-  resources :users do
-    resources :categories
-    resources :households do
-      collection do
-        get :income
-      end
+  resources :users
+  resources :categories
+  resources :households do
+    collection do
+      get :income
+      get :expense
     end
   end
 end

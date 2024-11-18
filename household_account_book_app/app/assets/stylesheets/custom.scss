@@ -40,6 +40,10 @@ header {
     }
     .expense {
       padding-right: 30px;
+      .income-button {
+        color: inherit;
+        text-decoration: none;
+      }
     }
     .signout {
       padding-right: 30px;
@@ -277,6 +281,53 @@ header {
     width: 100%;
     margin-top: 10px;
     .income {
+      display: flex;
+      float: left;
+      justify-content: center;
+      font-size: 30px;
+      p {
+        padding-left: 80px;
+      }
+    }
+  }
+}
+
+.expense-page {
+  display: flex;
+  float: left;
+  flex-direction: column;
+  .grath {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+    height: 1000px;
+    .grath-expense-this-year {
+      border: 3px solid black;
+      border-radius: 10px;
+    }
+    .grath-net-expense-this-month {
+      border: 3px solid black;
+      border-radius: 10px;
+    }
+    .grath-fixed_expense-his-year {
+      border: 3px solid black;
+      border-radius: 10px;
+    }
+    .grath-variable_expense-this-month {
+      border: 3px solid black;
+      border-radius: 10px;
+    }
+  }
+  .index-expense {
+    display: flex;
+    float: left;
+    flex-direction: column;
+    border: 3px solid black;
+    border-radius: 10px;
+    width: 100%;
+    margin-top: 10px;
+    .expense {
       display: flex;
       float: left;
       justify-content: center;

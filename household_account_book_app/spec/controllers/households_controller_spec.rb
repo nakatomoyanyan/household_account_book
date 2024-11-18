@@ -15,7 +15,7 @@ RSpec.describe HouseholdsController, type: :controller do
   end
 
   before do
-    allow(controller).to receive(:current_user).and_return(user)
+    login_user(user)
   end
 
   describe 'GET #index' do
@@ -32,37 +32,37 @@ RSpec.describe HouseholdsController, type: :controller do
     end
 
     it 'assigns a new Household to @household' do
-      get :index, params: { user_id: user.id }
+      get :index
       expect(assigns(:household)).to be_a_new(Household)
     end
 
     it 'assigns @financial_summary_this_year[:total_income]' do
-      get :index, params: { user_id: user.id }
+      get :index
       expect(Household.financial_summary_this_year[:total_income]).to eq(2000)
     end
 
     it 'assigns @financial_summary_this_year[:total_expense]' do
-      get :index, params: { user_id: user.id }
+      get :index
       expect(Household.financial_summary_this_year[:total_expense]).to eq(380)
     end
 
     it 'assigns @financial_summary_this_year[:net_balance]' do
-      get :index, params: { user_id: user.id }
+      get :index
       expect(Household.financial_summary_this_year[:net_balance]).to eq(1620)
     end
 
     it 'assigns @financial_summary_this_month[:total_income]' do
-      get :index, params: { user_id: user.id }
+      get :index
       expect(Household.financial_summary_this_month[:total_income]).to eq(1000)
     end
 
     it 'assigns @financial_summary_this_month[:total_expense]' do
-      get :index, params: { user_id: user.id }
+      get :index
       expect(Household.financial_summary_this_month[:total_expense]).to eq(190)
     end
 
     it 'assigns @financial_summary_this_month[:net_balance]' do
-      get :index, params: { user_id: user.id }
+      get :index
       expect(Household.financial_summary_this_month[:net_balance]).to eq(810)
     end
   end
@@ -71,13 +71,13 @@ RSpec.describe HouseholdsController, type: :controller do
     context 'with valid parameters' do
       it 'creates a new Household' do
         expect do
-          post :create, params: { user_id: user.id, household: valid_attributes }
+          post :create, params: { household: valid_attributes }
         end.to change(Household, :count).by(1)
       end
 
       it 'redirects to the user household index' do
-        post :create, params: { user_id: user.id, household: valid_attributes }
-        expect(response).to redirect_to(user_households_path(user))
+        post :create, params: { household: valid_attributes }
+        expect(response).to redirect_to(households_path(user))
         expect(flash[:notice]).to eq('登録に成功しました')
       end
     end
@@ -85,23 +85,23 @@ RSpec.describe HouseholdsController, type: :controller do
     context 'with invalid parameters' do
       it 'does not create a new Household' do
         expect do
-          post :create, params: { user_id: user.id, household: { name: '', date: nil } }
+          post :create, params: { household: { name: '', date: nil } }
         end.not_to change(Household, :count)
       end
 
       it 'redirects to the user household index with an error message' do
-        post :create, params: { user_id: user.id, household: { name: '', date: nil } }
+        post :create, params: { household: { name: '', date: nil } }
         expect(flash[:notice]).to eq('登録に失敗しました')
         expect(response).to render_template('index')
         expect(response.status).to eq 422
       end
     end
 
-    describe 'authorize_user' do
+    describe 'require_login' do
       it 'redirects to root path if user is not the current user' do
-        allow(controller).to receive(:current_user).and_return(other_user)
-        get :index, params: { user_id: user.id }
-        expect(flash[:notice]).to eq('アクセス権限がありません')
+        logout_user
+        get :index
+        expect(flash[:notice]).to eq('ログインしてください')
         expect(response).to redirect_to(root_path)
       end
     end
@@ -109,19 +109,26 @@ RSpec.describe HouseholdsController, type: :controller do
 
   describe 'get #income' do
     it 'assigns a new index_income_this_year' do
-      get :income, params: { user_id: user.id }
+      get :income
       expect(assigns(:incomes_this_year)).to eq(user.households.income.this_year)
     end
 
     it 'assigns a new incomes_grath_data_this_year' do
-      get :income, params: { user_id: user.id }
+      get :income
       expect(assigns(:incomes_grath_data_this_year)).to eq(user.households.income.this_year.group_by_month(:date,
                                                                                                            format: '%B').sum(:amount))
     end
 
     it 'assigns a new incomes_grath_data_this_month' do
-      get :income, params: { user_id: user.id }
+      get :income
       expect(assigns(:incomes_grath_data_this_month)).to eq(user.households.income.this_month.group(:name).sum(:amount))
+    end
+  end
+
+  describe 'get #expense' do
+    it 'assigns a new expenses_this_year' do
+      get :expense
+      expect(assigns(:expenses_this_year)).to eq(user.households.expense.this_year)
     end
   end
 end
