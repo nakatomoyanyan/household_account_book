@@ -135,23 +135,15 @@ RSpec.describe HouseholdsController, type: :controller do
   end
 
   describe 'get #expense' do
-    it 'assigns a new expenses_this_year' do
+    it 'assigns a new all_expenses_this_year' do
       get :expense
       expect(assigns(:all_expenses_this_year)).to eq(user.households.all_expense.this_year)
     end
 
-    it 'assigns a new all_expenses_grath_data_this_month' do
+    it 'assigns a new expenses_grath_data_this_month' do
       get :expense
       expect(assigns(:all_expenses_grath_data_this_month)).to eq(user.households.all_expense.this_month.group(:name).sum(:amount))
-    end
-
-    it 'assigns a new fixed_expenses_grath_data_this_month' do
-      get :expense
       expect(assigns(:fixed_expenses_grath_data_this_month)).to eq(user.households.fixed_expense.this_month.group(:name).sum(:amount))
-    end
-
-    it 'assigns a new variable_expenses_grath_data_this_month' do
-      get :expense
       expect(assigns(:variable_expenses_grath_data_this_month)).to eq(user.households.variable_expense.this_month.group(:name).sum(:amount))
     end
 
