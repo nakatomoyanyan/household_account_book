@@ -11,8 +11,14 @@ class Household < ApplicationRecord
   scope :income, lambda {
     where(transaction_type: 0)
   }
-  scope :expense, lambda {
+  scope :all_expense, lambda {
     where(transaction_type: [1, 2])
+  }
+  scope :fixed_expense, lambda {
+    where(transaction_type: [1])
+  }
+  scope :variable_expense, lambda {
+    where(transaction_type: [2])
   }
   scope :this_year, lambda {
     where(date: Time.current.all_year)
@@ -25,14 +31,14 @@ class Household < ApplicationRecord
 
   def self.financial_summary_this_year
     total_income = income.this_year.sum(:amount)
-    total_expense = expense.this_year.sum(:amount)
+    total_expense = all_expense.this_year.sum(:amount)
     net_balance = total_income - total_expense
     FinancialSummaryStruct.new(total_income:, total_expense:, net_balance:)
   end
 
   def self.financial_summary_this_month
     total_income = income.this_month.sum(:amount)
-    total_expense = expense.this_month.sum(:amount)
+    total_expense = all_expense.this_month.sum(:amount)
     net_balance = total_income - total_expense
     FinancialSummaryStruct.new(total_income:, total_expense:, net_balance:)
   end
