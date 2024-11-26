@@ -25,7 +25,7 @@
                 <% @all_expenses_this_year.each do |expense| %>
                 <div class="expense">
                     <p><%= expense.date%></p>
-                    <p><%= expense.name%></p>
+                    <p><%= expense.category.name%></p>
                     <p><%= expense.transaction_type_i18n%></p>
                     <p><%= number_to_currency(expense.amount)%></p>
                 </div>
