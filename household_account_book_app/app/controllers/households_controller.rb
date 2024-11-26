@@ -4,6 +4,27 @@ class HouseholdsController < ApplicationController
     @household = Household.new
     @financial_summary_this_year = current_user.households.financial_summary_this_year
     @financial_summary_this_month = current_user.households.financial_summary_this_month
+    @years_months = current_user.households.distinct_years_months
+    @households = current_user.households.all
+    if params[:year_month].present?
+      year, month = params[:year_month].split('-')
+      @households = @households.where("strftime('%Y', date) = ? AND strftime('%m', date) = ?", year, month)
+    end
+    return if params[:transaction_type].blank?
+
+    transaction_types = case params[:transaction_type]
+                        when 'income'
+                          [0]
+                        when 'expense'
+                          [1, 2]
+                        else
+                          [0, 1, 2]
+                        end
+    @households = @households.where(transaction_type: transaction_types)
+    return if params[:category_id].blank?
+
+    @households = @households.where(category_id: params[:category_id])
+    @households = @households.order(date: :desc)
   end
 
   def create
@@ -19,9 +40,9 @@ class HouseholdsController < ApplicationController
 
   def income
     incomes = current_user.households.income
-    @incomes_this_year = incomes.this_year
-    @incomes_grath_data_this_year = @incomes_this_year.group_by_month(:date, format: '%B').sum(:amount)
+    @incomes_this_year = incomes.this_year.decorate
     @incomes_grath_data_this_month = incomes.this_month.joins(:category).group('categories.name').sum(:amount)
+    @incomes_grath_data_this_year = incomes.this_year.group_by_month(:date, format: '%B').sum(:amount)
   end
 
   def expense
