@@ -26,6 +26,7 @@ class HouseholdsController < ApplicationController
     end
     @q.category_id_eq = params[:category_id] if params[:category_id].present?
     @households = @q.result(distinct: true).order(date: :desc).page(params[:page]).per(50)
+    @total_amount_households = @households.sum(:amount)
   end
 
   def create
