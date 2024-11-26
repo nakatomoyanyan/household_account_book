@@ -5,26 +5,24 @@ class HouseholdsController < ApplicationController
     @financial_summary_this_year = current_user.households.financial_summary_this_year
     @financial_summary_this_month = current_user.households.financial_summary_this_month
     @years_months = current_user.households.distinct_years_months
-    @households = current_user.households.all
+    @q = current_user.households.ransack(params[:q])
     if params[:year_month].present?
       year, month = params[:year_month].split('-')
-      @households = @households.where("strftime('%Y', date) = ? AND strftime('%m', date) = ?", year, month)
+      @q.date_eq = "#{year}-#{month}"
     end
-    return if params[:transaction_type].blank?
-
-    transaction_types = case params[:transaction_type]
-                        when 'income'
-                          [0]
-                        when 'expense'
-                          [1, 2]
-                        else
-                          [0, 1, 2]
-                        end
-    @households = @households.where(transaction_type: transaction_types)
-    return if params[:category_id].blank?
-
-    @households = @households.where(category_id: params[:category_id])
-    @households = @households.order(date: :desc)
+    if params[:transaction_type].present?
+      transaction_types = case params[:transaction_type]
+                          when 'income'
+                            [0]
+                          when 'expense'
+                            [1, 2]
+                          else
+                            [0, 1, 2]
+                          end
+      @q.transaction_type_in = transaction_types
+    end
+    @q.category_id_eq = params[:category_id] if params[:category_id].present?
+    @households = @q.result.order(date: :desc)
   end
 
   def create

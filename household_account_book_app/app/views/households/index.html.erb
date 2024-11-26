@@ -83,6 +83,8 @@
                             <%= f.select :category_id, options_for_select([['すべて', '']] + Category.all.map { |category| [category.name, category.id] }, selected: params[:category_id]), include_blank: "選択してください", class: "form-control" %>
                         </div>
                         <%= submit_tag "検索", class: "button" %> 
+                        <%= sort_link(@q, :date, "日付並べ替え") %>
+                        <%= sort_link(@q, :amount, "金額並べ替え") %>
                     </div>                   
                     <% end %>
                     <div class="serach-result">

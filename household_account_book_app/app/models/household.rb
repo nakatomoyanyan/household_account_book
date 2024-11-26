@@ -47,4 +47,9 @@ class Household < ApplicationRecord
     net_balance = total_income - total_expense
     FinancialSummaryStruct.new(total_income:, total_expense:, net_balance:)
   end
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[amount category_id created_at date id id_value name transaction_type updated_at
+       user_id]
+  end
 end
