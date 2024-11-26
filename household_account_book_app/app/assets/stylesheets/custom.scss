@@ -193,6 +193,9 @@ header {
     }
     .serach-result {
       padding-top: 10px;
+      .pagination .page {
+        margin-right: 50px;
+      }
     }
   }
 }

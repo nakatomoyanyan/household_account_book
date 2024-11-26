@@ -23,7 +23,7 @@ class HouseholdsController < ApplicationController
       @q.transaction_type_in = transaction_types
     end
     @q.category_id_eq = params[:category_id] if params[:category_id].present?
-    @households = @q.result(distinct: true).order(date: :desc)
+    @households = @q.result(distinct: true).order(date: :desc).page(params[:page]).per(50)
   end
 
   def create

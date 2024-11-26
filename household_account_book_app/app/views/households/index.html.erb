@@ -94,6 +94,9 @@
                             <li><%= household.date %> - <%= household.category.name %> - <%= number_to_currency(household.amount) %></li>
                             <% end %>
                         </ul>
+                        <div class="pagination">
+                            <%= paginate @households %>
+                        </div>
                         <% else %>
                         <p>該当するデータはありません。</p>
                         <% end %>
