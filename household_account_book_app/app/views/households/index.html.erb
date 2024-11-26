@@ -71,8 +71,8 @@
                     <%= form_with(url: households_path, method: :get ) do |f| %>
                     <div class="form">
                         <div class="year-month">
-                            <%= f.label :year_month, "年月" %>
-                            <%= f.select :year_month, options_for_select([['すべて', '']] + @years_months.map { |year, month| ["#{year}年#{month}月", "#{year}-#{month}"] }), include_blank: "選択してください", class: "form-control" %>
+                            <%= f.label :date, "年月" %>
+                            <%= f.select :date, options_for_select([['すべて', '']] + @years_months.map { |year, month| ["#{year}年#{month}月", "#{year}-#{month}"] }, selected: params[:date]), include_blank: "選択してください", class: "form-control" %>
                         </div>
                         <div class="transaction_type">
                             <%= f.label :transaction_type, "分類" %>

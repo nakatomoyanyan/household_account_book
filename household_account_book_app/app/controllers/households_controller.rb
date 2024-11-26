@@ -6,10 +6,11 @@ class HouseholdsController < ApplicationController
     @financial_summary_this_month = current_user.households.financial_summary_this_month
     @years_months = current_user.households.distinct_years_months
     @q = current_user.households.ransack(params[:q])
-    if params[:year_month].present?
-      year, month = params[:year_month].split('-')
-      @q.date_eq = "#{year}-#{month}"
-    end
+    year, month = params[:date].split('-').map(&:to_i)
+    start_date = Date.new(year, month, 1)
+    end_date = start_date.end_of_month
+    @q.date_gteq = start_date
+    @q.date_lteq = end_date
     if params[:transaction_type].present?
       transaction_types = case params[:transaction_type]
                           when 'income'
@@ -22,7 +23,7 @@ class HouseholdsController < ApplicationController
       @q.transaction_type_in = transaction_types
     end
     @q.category_id_eq = params[:category_id] if params[:category_id].present?
-    @households = @q.result.order(date: :desc)
+    @households = @q.result(distinct: true).order(date: :desc)
   end
 
   def create

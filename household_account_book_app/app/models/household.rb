@@ -49,7 +49,6 @@ class Household < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[amount category_id created_at date id id_value name transaction_type updated_at
-       user_id]
+    super + ['date']
   end
 end
