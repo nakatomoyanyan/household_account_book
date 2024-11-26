@@ -176,6 +176,9 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    kaminari-i18n (0.5.0)
+      kaminari
+      rails
     language_server-protocol (3.17.0.3)
     logger (1.6.1)
     loofah (2.22.0)
@@ -449,6 +452,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kaminari
+  kaminari-i18n
   puma (>= 5.0)
   rails (~> 7.2.1)
   rails-controller-testing
