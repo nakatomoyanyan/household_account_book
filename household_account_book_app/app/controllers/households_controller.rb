@@ -6,11 +6,13 @@ class HouseholdsController < ApplicationController
     @financial_summary_this_month = current_user.households.financial_summary_this_month
     @years_months = current_user.households.distinct_years_months
     @q = current_user.households.ransack(params[:q])
-    year, month = params[:date].split('-').map(&:to_i)
-    start_date = Date.new(year, month, 1)
-    end_date = start_date.end_of_month
-    @q.date_gteq = start_date
-    @q.date_lteq = end_date
+    if params[:date].present? && params[:date] != ''
+      year, month = params[:date].split('-').map(&:to_i)
+      start_date = Date.new(year, month, 1)
+      end_date = start_date.end_of_month
+      @q.date_gteq = start_date
+      @q.date_lteq = end_date
+    end
     if params[:transaction_type].present?
       transaction_types = case params[:transaction_type]
                           when 'income'
