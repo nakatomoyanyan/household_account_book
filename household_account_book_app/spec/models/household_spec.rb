@@ -97,8 +97,22 @@ RSpec.describe Household, type: :model do
                                                income_last_month, fixed_expense_last_month, variable_expense_last_month])
     end
 
-    it 'returnsfrom the current month when .this_month' do
+    it 'returns from the current month when .this_month' do
       expect(described_class.this_month).to eq([income_this_year, fixed_expense_this_year, variable_expense_this_year])
+    end
+
+    describe '.distinct_years_months' do
+      before do
+        @record1 = create(:household, transaction_type: 0, date: Date.new(2024, 5, 10), amount: 4000, user:, category:)
+        @record2 = create(:household, transaction_type: 1, date: Date.new(2024, 6, 10), amount: 4000, user:, category:)
+        @record3 = create(:household, transaction_type: 1, date: Date.new(2024, 6, 10), amount: 4000, user:, category:)
+        @record4 = create(:household, transaction_type: 1, date: Date.new(2023, 6, 10), amount: 4000, user:, category:)
+      end
+
+      it 'returns unique year and month combinations in descending order' do
+        expected = [%w[2024 06], %w[2024 05], %w[2023 06]]
+        expect(described_class.distinct_years_months).to eq(expected)
+      end
     end
   end
 end
