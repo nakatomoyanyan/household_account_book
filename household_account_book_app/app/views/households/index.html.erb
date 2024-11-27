@@ -90,11 +90,13 @@
                     <div class="serach-result">
                         <% if @households.present? %>
                         <p>検索結果の合計金額<%= number_to_currency(@total_amount_households)%></p>
-                        <ul>
-                            <% @households.each do |household| %>
-                            <li><%= household.date %> - <%= household.category.name %> - <%= number_to_currency(household.amount) %></li>
-                            <% end %>
-                        </ul>
+                        <div class="index-households">
+                            <ul>
+                                <% @households.each do |household| %>
+                                <li><%= household.date %> - <%= household.category.name %> - <%= number_to_currency(household.amount) %></li>
+                                <% end %>
+                            </ul>
+                        </div>
                         <div class="pagination">
                             <%= paginate @households %>
                         </div>

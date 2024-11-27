@@ -192,6 +192,9 @@ header {
       }
     }
     .serach-result {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding-top: 10px;
       .pagination .page {
         margin-right: 50px;
