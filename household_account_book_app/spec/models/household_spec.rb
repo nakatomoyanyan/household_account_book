@@ -102,11 +102,17 @@ RSpec.describe Household, type: :model do
     end
 
     describe '.distinct_years_months' do
-      before do
-        @record1 = create(:household, transaction_type: 0, date: Date.new(2024, 5, 10), amount: 4000, user:, category:)
-        @record2 = create(:household, transaction_type: 1, date: Date.new(2024, 6, 10), amount: 4000, user:, category:)
-        @record3 = create(:household, transaction_type: 1, date: Date.new(2024, 6, 10), amount: 4000, user:, category:)
-        @record4 = create(:household, transaction_type: 1, date: Date.new(2023, 6, 10), amount: 4000, user:, category:)
+      let!(:record1) do
+        create(:household, transaction_type: 0, date: Date.new(2024, 5, 10), amount: 4000, user:, category:)
+      end
+      let!(:record2) do
+        create(:household, transaction_type: 1, date: Date.new(2024, 6, 10), amount: 4000, user:, category:)
+      end
+      let!(:record3) do
+        create(:household, transaction_type: 1, date: Date.new(2024, 6, 10), amount: 4000, user:, category:)
+      end
+      let!(:record4) do
+        create(:household, transaction_type: 0, date: Date.new(2023, 6, 10), amount: 4000, user:, category:)
       end
 
       it 'returns unique year and month combinations in descending order' do
