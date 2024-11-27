@@ -25,8 +25,8 @@ class HouseholdsController < ApplicationController
       @q.transaction_type_in = transaction_types
     end
     @q.category_id_eq = params[:category_id] if params[:category_id].present?
-    @total_amount_households = @q.result(distinct: true).sum(:amount)
-    @households = @q.result(distinct: true).order(date: :desc).page(params[:page]).per(50)
+    @total_amount_households = @q.result.sum(:amount)
+    @households = @q.result.order(date: :desc).page(params[:page]).per(50)
   end
 
   def create
