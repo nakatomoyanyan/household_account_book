@@ -26,6 +26,27 @@ class Household < ApplicationRecord
   scope :this_month, lambda {
     where(date: Time.current.all_month)
   }
+  scope :in_date_range, lambda { |date_param|
+    if date_param.present? && date_param != ''
+      year, month = date_param.split('-').map(&:to_i)
+      start_date = Date.new(year, month, 1)
+      end_date = start_date.end_of_month
+      where(date: start_date..end_date)
+    end
+  }
+  scope :transaction_type_filter, lambda { |transaction_type_param|
+    case transaction_type_param
+    when 'income'
+      where(transaction_type: 0)
+    when 'expense'
+      where(transaction_type: [1, 2])
+    else
+      all
+    end
+  }
+  scope :category_filter, lambda { |category_id|
+    where(category_id:) if category_id.present?
+  }
 
   FinancialSummaryStruct = Struct.new(:total_income, :total_expense, :net_balance)
 

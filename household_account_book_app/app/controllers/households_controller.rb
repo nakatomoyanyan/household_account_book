@@ -6,27 +6,15 @@ class HouseholdsController < ApplicationController
     @financial_summary_this_month = current_user.households.financial_summary_this_month
     @years_months = current_user.households.distinct_years_months
     @q = current_user.households.ransack(params[:q])
-    if params[:date].present? && params[:date] != ''
-      year, month = params[:date].split('-').map(&:to_i)
-      start_date = Date.new(year, month, 1)
-      end_date = start_date.end_of_month
-      @q.date_gteq = start_date
-      @q.date_lteq = end_date
-    end
-    if params[:transaction_type].present?
-      transaction_types = case params[:transaction_type]
-                          when 'income'
-                            [0]
-                          when 'expense'
-                            [1, 2]
-                          else
-                            [0, 1, 2]
-                          end
-      @q.transaction_type_in = transaction_types
-    end
-    @q.category_id_eq = params[:category_id] if params[:category_id].present?
-    @total_amount_households = @q.result.sum(:amount)
-    @households = @q.result.eager_load(:category).order(date: :desc).page(params[:page]).per(50)
+    @households = @q.result
+                    .in_date_range(params[:date])
+                    .transaction_type_filter(params[:transaction_type])
+                    .category_filter(params[:category_id])
+                    .eager_load(:category)
+                    .order(date: :desc)
+                    .page(params[:page])
+                    .per(50)
+    @total_amount_households = @households.sum(:amount)
   end
 
   def create
