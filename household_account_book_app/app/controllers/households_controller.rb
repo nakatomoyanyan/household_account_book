@@ -5,6 +5,7 @@ class HouseholdsController < ApplicationController
     @financial_summary_this_year = current_user.households.financial_summary_this_year
     @financial_summary_this_month = current_user.households.financial_summary_this_month
     @years_months = current_user.households.distinct_years_months
+    params[:q] ||= {}
     @q = current_user.households.ransack(params[:q])
     @households = @q.result
                     .eager_load(:category)
