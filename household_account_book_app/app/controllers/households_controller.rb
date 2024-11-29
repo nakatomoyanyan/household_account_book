@@ -7,9 +7,6 @@ class HouseholdsController < ApplicationController
     @years_months = current_user.households.distinct_years_months
     @q = current_user.households.ransack(params[:q])
     @households = @q.result
-                    .in_date_range(params[:date])
-                    .transaction_type_filter(params[:transaction_type])
-                    .category_filter(params[:category_id])
                     .eager_load(:category)
                     .order(date: :desc)
                     .page(params[:page])

@@ -26,16 +26,16 @@ class Household < ApplicationRecord
   scope :this_month, lambda {
     where(date: Time.current.all_month)
   }
-  scope :in_date_range, lambda { |date_param|
-    if date_param.present? && date_param != ''
-      year, month = date_param.split('-').map(&:to_i)
+  scope :in_date_range, lambda { |date|
+    if date.present? && date != ''
+      year, month = date.split('-').map(&:to_i)
       start_date = Date.new(year, month, 1)
       end_date = start_date.end_of_month
       where(date: start_date..end_date)
     end
   }
-  scope :transaction_type_filter, lambda { |transaction_type_param|
-    case transaction_type_param
+  scope :transaction_type_in, lambda { |transaction_type|
+    case transaction_type
     when 'income'
       where(transaction_type: 0)
     when 'expense'
@@ -44,7 +44,7 @@ class Household < ApplicationRecord
       all
     end
   }
-  scope :category_filter, lambda { |category_id|
+  scope :category_id_eq, lambda { |category_id|
     where(category_id:) if category_id.present?
   }
 
@@ -66,6 +66,14 @@ class Household < ApplicationRecord
 
   def self.ransackable_attributes(auth_object = nil)
     super + ['date']
+  end
+
+  def self.ransackable_scopes(auth_object = nil)
+    %i[in_date_range transaction_type_in category_id_eq]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[category user]
   end
 
   def self.distinct_years_months
