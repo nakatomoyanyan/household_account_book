@@ -105,8 +105,8 @@ RSpec.describe HouseholdsController, type: :controller do
     end
 
     it 'filters @households by category using ransack' do
-      get :index, params: { q: { category_id_eq: category_2.id } }
-      expect(assigns(:households)).to contain_exactly(fixed_expense, variable_expense, variable_expense_same_day)
+      get :index, params: { q: { category_id_eq: category_1.id } }
+      expect(assigns(:households)).to contain_exactly(income)
     end
 
     it 'orders @households by date desc and id asc' do

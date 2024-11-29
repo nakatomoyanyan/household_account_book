@@ -77,6 +77,10 @@ class Household < ApplicationRecord
     %w[category user]
   end
 
+  def self.ransackable_scopes_skip_sanitize_args
+    [:category_id_eq]
+  end
+
   def self.distinct_years_months
     select("DISTINCT strftime('%Y', date) AS year, strftime('%m', date) AS month")
       .order('year DESC, month DESC')
