@@ -8,7 +8,7 @@ class HouseholdsController < ApplicationController
     @q = current_user.households.ransack(params[:q])
     @households = @q.result
                     .eager_load(:category)
-                    .order(date: :desc)
+                    .order(date: :desc, id: :asc)
                     .page(params[:page])
                     .per(50)
     @total_amount_households = @households.sum(:amount)
