@@ -101,6 +101,51 @@ RSpec.describe Household, type: :model do
       expect(described_class.this_month).to eq([income_this_year, fixed_expense_this_year, variable_expense_this_year])
     end
 
+    describe '.in_date_range' do
+      let!(:record) do
+        create(:household, transaction_type: 0, date: '2024-11-01', amount: 4000, user:, category:)
+      end
+      let!(:different_month_record) do
+        create(:household, transaction_type: 0, date: '2024-12-01', amount: 4000, user:, category:)
+      end
+
+      it 'filters records within the specified month' do
+        expect(described_class.in_date_range('2024-11')).to contain_exactly(record)
+      end
+    end
+
+    describe '.transaction_type_in' do
+      let!(:income_record) do
+        create(:household, transaction_type: 0, date: '2024-11-01', amount: 4000, user:, category:)
+      end
+      let!(:expense_record) do
+        create(:household, transaction_type: 1, date: '2024-11-01', amount: 4000, user:, category:)
+      end
+
+      it 'filters income records' do
+        expect(described_class.transaction_type_in('income')).to contain_exactly(income_record)
+      end
+
+      it 'filters expense records' do
+        expect(described_class.transaction_type_in('expense')).to contain_exactly(expense_record)
+      end
+    end
+
+    describe '.category_id_eq' do
+      let!(:category1) { create(:category, user:) }
+      let!(:category2) { create(:category, user:) }
+      let!(:record) do
+        create(:household, transaction_type: 0, date: '2024-11-01', amount: 4000, user:, category: category1)
+      end
+      let!(:different_category_record) do
+        create(:household, transaction_type: 0, date: '2024-11-01', amount: 4000, user:, category: category2)
+      end
+
+      it 'filters records by category_id' do
+        expect(described_class.category_id_eq(category1.id)).to contain_exactly(record)
+      end
+    end
+
     describe '.distinct_years_months' do
       let!(:record1) do
         create(:household, transaction_type: 0, date: Date.new(2024, 5, 10), amount: 4000, user:, category:)

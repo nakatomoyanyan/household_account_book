@@ -85,50 +85,47 @@ RSpec.describe HouseholdsController, type: :controller do
     let!(:variable_expense) do
       create(:household, transaction_type: 2, date: Date.new(2024, 6, 10), amount: 4000, user:, category: category_2)
     end
-
-    context 'when filtering by date' do
-      it 'returns records within the given month' do
-        get :index, params: { q: {}, date: '2024-11' }
-
-        expect(assigns(:households)).to eq([income, fixed_expense])
-      end
+    let!(:variable_expense_same_day) do
+      create(:household, transaction_type: 2, date: Date.new(2024, 6, 10), amount: 4000, user:, category: category_2)
     end
 
-    context 'when filtering by transaction_type' do
-      it 'returns only income records' do
-        get :index, params: { q: {}, transaction_type: 'income' }
-
-        expect(assigns(:households)).to contain_exactly(income)
-      end
-
-      it 'returns only expense records' do
-        get :index, params: { q: {}, transaction_type: 'expense' }
-
-        expect(assigns(:households)).to contain_exactly(fixed_expense, variable_expense)
-      end
+    it 'assigns @q with ransack query' do
+      get :index, params: { q: { in_date_range: '2024-11' } }
+      expect(assigns(:q)).to be_a(Ransack::Search)
     end
 
-    context 'when filtering by category_id' do
-      it 'returns only records with the given category' do
-        get :index, params: { q: {}, category_id: category_1.id }
-
-        expect(assigns(:households)).to contain_exactly(income)
-      end
+    it 'filters @households by date using ransack' do
+      get :index, params: { q: { in_date_range: '2024-11' } }
+      expect(assigns(:households)).to contain_exactly(income, fixed_expense)
     end
 
-    context 'when calculating the total amount' do
-      it 'calculates the correct sum of amounts' do
-        get :index, params: { q: {}, transaction_type: 'income' }
+    it 'filters @households by transaction_type using ransack' do
+      get :index, params: { q: { transaction_type_in: 'income' } }
+      expect(assigns(:households)).to contain_exactly(income)
+    end
 
-        expect(assigns(:total_amount_households)).to eq(4000)
-      end
+    it 'filters @households by category using ransack' do
+      get :index, params: { q: { category_id_eq: category_2.id } }
+      expect(assigns(:households)).to contain_exactly(fixed_expense, variable_expense, variable_expense_same_day)
+    end
+
+    it 'orders @households by date desc and id asc' do
+      get :index, params: { q: { in_date_range: '2024-06' } }
+      expect(assigns(:households)).to eq([variable_expense, variable_expense_same_day])
+    end
+
+    it 'calculates @total_amount_households correctly' do
+      get :index, params: { q: { transaction_type_in: 'expense' } }
+      total_amount = fixed_expense.amount + variable_expense.amount + variable_expense_same_day.amount
+      expect(assigns(:total_amount_households)).to eq(total_amount)
     end
 
     context 'when no filters are applied' do
       it 'returns all records for the current user' do
         get :index, params: { q: {} }
 
-        expect(assigns(:households)).to contain_exactly(income, fixed_expense, variable_expense)
+        expect(assigns(:households)).to contain_exactly(income, fixed_expense, variable_expense,
+                                                        variable_expense_same_day)
       end
     end
   end
