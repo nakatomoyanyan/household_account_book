@@ -26,7 +26,7 @@ class HouseholdsController < ApplicationController
     end
     @q.category_id_eq = params[:category_id] if params[:category_id].present?
     @total_amount_households = @q.result.sum(:amount)
-    @households = @q.result.order(date: :desc).page(params[:page]).per(50)
+    @households = @q.result.eager_load(:category).order(date: :desc).page(params[:page]).per(50)
   end
 
   def create
@@ -42,14 +42,14 @@ class HouseholdsController < ApplicationController
 
   def income
     incomes = current_user.households.income
-    @incomes_this_year = incomes.this_year.decorate
+    @incomes_this_year = incomes.this_year.eager_load(:category).decorate
     @incomes_grath_data_this_month = incomes.this_month.joins(:category).group('categories.name').sum(:amount)
     @incomes_grath_data_this_year = incomes.this_year.group_by_month(:date, format: '%B').sum(:amount)
   end
 
   def expense
     households = current_user.households
-    @all_expenses_this_year = households.all_expense.this_year.decorate
+    @all_expenses_this_year = households.all_expense.this_year.eager_load(:category).decorate
     @all_expenses_grath_data_this_month = households.all_expense.this_month.joins(:category).group('categories.name').sum(:amount)
     @fixed_expenses_grath_data_this_month = households.fixed_expense.this_month.joins(:category).group('categories.name').sum(:amount)
     @variable_expenses_grath_data_this_month = households.variable_expense.this_month.joins(:category).group('categories.name').sum(:amount)
