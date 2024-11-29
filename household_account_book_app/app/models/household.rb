@@ -26,11 +26,6 @@ class Household < ApplicationRecord
   scope :this_month, lambda {
     where(date: Time.current.all_month)
   }
-  scope :distinct_years_months, lambda {
-    select("DISTINCT strftime('%Y', date) AS year, strftime('%m', date) AS month")
-      .order('year DESC, month DESC')
-      .map { |record| [record.year, record.month] }
-  }
 
   FinancialSummaryStruct = Struct.new(:total_income, :total_expense, :net_balance)
 
@@ -50,5 +45,11 @@ class Household < ApplicationRecord
 
   def self.ransackable_attributes(auth_object = nil)
     super + ['date']
+  end
+
+  def self.distinct_years_months
+    select("DISTINCT strftime('%Y', date) AS year, strftime('%m', date) AS month")
+      .order('year DESC, month DESC')
+      .map { |record| [record.year, record.month] }
   end
 end
