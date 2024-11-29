@@ -44,6 +44,7 @@ class Household < ApplicationRecord
       all
     end
   }
+
   scope :category_id_eq, lambda { |category_id|
     where(category_id:) if category_id.present?
   }
@@ -68,11 +69,11 @@ class Household < ApplicationRecord
     super + ['date']
   end
 
-  def self.ransackable_scopes(auth_object = nil)
+  def self.ransackable_scopes(_auth_object = nil)
     %i[in_date_range transaction_type_in category_id_eq]
   end
 
-  def self.ransackable_associations(auth_object = nil)
+  def self.ransackable_associations(_auth_object = nil)
     %w[category user]
   end
 
