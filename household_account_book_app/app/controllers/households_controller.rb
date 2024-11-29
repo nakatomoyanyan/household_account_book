@@ -7,12 +7,12 @@ class HouseholdsController < ApplicationController
     @years_months = current_user.households.distinct_years_months
     params[:q] ||= {}
     @q = current_user.households.ransack(params[:q])
+    @total_amount_households = @q.result.sum(:amount)
     @households = @q.result
                     .eager_load(:category)
                     .order(date: :desc, id: :asc)
                     .page(params[:page])
                     .per(50)
-    @total_amount_households = @households.sum(:amount)
   end
 
   def create
