@@ -17,7 +17,7 @@
                 <% @incomes_this_year.each do |income| %>
                 <div class="income">
                     <p><%= income.date%></p>
-                    <p><%= income.name%></p>
+                    <p><%= income.category.name%></p>
                     <p><%= number_to_currency(income.amount)%></p>
                 </div>
                 <% end %>

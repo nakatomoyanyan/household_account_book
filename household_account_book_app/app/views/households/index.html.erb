@@ -66,6 +66,46 @@
                     <% end %>
                 </div>
             </div>
+            <div class="index-income-and-expense">
+                <h1>収入と支出の一覧&検索</h1>
+                    <%= search_form_for @q, url: households_path, method: :get do |f| %>
+                    <div class="form">
+                        <div class="in_date_range">
+                            <%= f.label :in_date_range, "年月" %>
+                            <%= f.select :in_date_range, options_for_select([['すべて', '']] + @years_months.map { |year, month| ["#{year}年#{month}月", "#{year}-#{month}"] }, selected: params[:q][:in_date_range]), include_blank: "選択してください", class: "form-control" %>
+                        </div>
+                        <div class="filter_transaction_type">
+                            <%= f.label :filter_transaction_type, "分類" %>
+                            <%= f.select :filter_transaction_type, options_for_select([['すべて', 'all'], ['収入だけ', 'income'], ['支出だけ', 'expense']], selected: params[:q][:filter_transaction_type]), include_blank: "選択してください", class: "form-control" %>
+                        </div>
+                        <div class="category_id_eq">
+                            <%= f.label :category_id_eq, "名目" %>
+                            <%= f.select :category_id_eq, options_for_select([['すべて', '']] + Category.all.map { |category| [category.name, category.id] }, selected: params[:q][:category_id_eq]), include_blank: "選択してください", class: "form-control" %>
+                        </div>
+                        <%= submit_tag "検索", class: "button" %> 
+                        <%= sort_link(@q, :date, "日付並べ替え") %>
+                        <%= sort_link(@q, :amount, "金額並べ替え") %>
+                    </div>                   
+                    <% end %>
+                    <div class="serach-result">
+                        <% if @households.present? %>
+                        <p>検索結果の合計金額<%= number_to_currency(@total_amount_households)%></p>
+                        <div class="index-households">
+                            <ul>
+                                <% @households.each do |household| %>
+                                <li><%= household.date %> - <%= household.category.name %> - <%= number_to_currency(household.amount) %></li>
+                                <% end %>
+                            </ul>
+                        </div>
+                        <div class="pagination">
+                            <%= paginate @households %>
+                        </div>
+                        <% else %>
+                        <p>該当するデータはありません。</p>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
