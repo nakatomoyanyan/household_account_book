@@ -114,7 +114,7 @@ RSpec.describe Household, type: :model do
       end
     end
 
-    describe '.transaction_type_in' do
+    describe '.filter_transaction_type' do
       let!(:income_record) do
         create(:household, transaction_type: 0, date: '2024-11-01', amount: 4000, user:, category:)
       end
@@ -123,26 +123,11 @@ RSpec.describe Household, type: :model do
       end
 
       it 'filters income records' do
-        expect(described_class.transaction_type_in('income')).to contain_exactly(income_record)
+        expect(described_class.filter_transaction_type('income')).to contain_exactly(income_record)
       end
 
       it 'filters expense records' do
-        expect(described_class.transaction_type_in('expense')).to contain_exactly(expense_record)
-      end
-    end
-
-    describe '.category_id_eq' do
-      let!(:category1) { create(:category, user:) }
-      let!(:category2) { create(:category, user:) }
-      let!(:record) do
-        create(:household, transaction_type: 0, date: '2024-11-01', amount: 4000, user:, category: category1)
-      end
-      let!(:different_category_record) do
-        create(:household, transaction_type: 0, date: '2024-11-01', amount: 4000, user:, category: category2)
-      end
-
-      it 'filters records by category_id' do
-        expect(described_class.category_id_eq(category1.id)).to contain_exactly(record)
+        expect(described_class.filter_transaction_type('expense')).to contain_exactly(expense_record)
       end
     end
 

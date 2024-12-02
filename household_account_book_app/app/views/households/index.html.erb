@@ -70,13 +70,13 @@
                 <h1>収入と支出の一覧&検索</h1>
                     <%= search_form_for @q, url: households_path, method: :get do |f| %>
                     <div class="form">
-                        <div class="year-month">
+                        <div class="in_date_range">
                             <%= f.label :in_date_range, "年月" %>
                             <%= f.select :in_date_range, options_for_select([['すべて', '']] + @years_months.map { |year, month| ["#{year}年#{month}月", "#{year}-#{month}"] }, selected: params[:q][:in_date_range]), include_blank: "選択してください", class: "form-control" %>
                         </div>
-                        <div class="transaction_type_in">
-                            <%= f.label :transaction_type_in, "分類" %>
-                            <%= f.select :transaction_type_in, options_for_select([['すべて', 'all'], ['収入だけ', 'income'], ['支出だけ', 'expense']], selected: params[:q][:transaction_type_in]), include_blank: "選択してください", class: "form-control" %>
+                        <div class="filter_transaction_type">
+                            <%= f.label :filter_transaction_type, "分類" %>
+                            <%= f.select :filter_transaction_type, options_for_select([['すべて', 'all'], ['収入だけ', 'income'], ['支出だけ', 'expense']], selected: params[:q][:filter_transaction_type]), include_blank: "選択してください", class: "form-control" %>
                         </div>
                         <div class="category_id_eq">
                             <%= f.label :category_id_eq, "名目" %>

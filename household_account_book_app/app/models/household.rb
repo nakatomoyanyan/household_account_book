@@ -34,7 +34,7 @@ class Household < ApplicationRecord
       where(date: start_date..end_date)
     end
   }
-  scope :transaction_type_in, lambda { |transaction_type|
+  scope :filter_transaction_type, lambda { |transaction_type|
     case transaction_type
     when 'income'
       where(transaction_type: 0)
@@ -43,10 +43,6 @@ class Household < ApplicationRecord
     else
       all
     end
-  }
-
-  scope :category_id_eq, lambda { |category_id|
-    where(category_id:) if category_id.present?
   }
 
   FinancialSummaryStruct = Struct.new(:total_income, :total_expense, :net_balance)
@@ -70,7 +66,7 @@ class Household < ApplicationRecord
   end
 
   def self.ransackable_scopes(_auth_object = nil)
-    %i[in_date_range transaction_type_in category_id_eq]
+    %i[in_date_range filter_transaction_type]
   end
 
   def self.ransackable_associations(_auth_object = nil)

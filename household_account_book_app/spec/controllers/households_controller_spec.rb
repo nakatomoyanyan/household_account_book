@@ -65,12 +65,6 @@ RSpec.describe HouseholdsController, type: :controller do
       get :index
       expect(Household.financial_summary_this_month[:net_balance]).to eq(810)
     end
-
-    it 'assigns @years_months' do
-      get :index
-      expected = [%w[2024 11], %w[2024 10]]
-      expect(user.households.distinct_years_months).to eq(expected)
-    end
   end
 
   describe '#index search by ransack' do
@@ -87,6 +81,12 @@ RSpec.describe HouseholdsController, type: :controller do
     end
     let!(:variable_expense_same_day) do
       create(:household, transaction_type: 2, date: Date.new(2024, 6, 10), amount: 4000, user:, category: category_2)
+    end
+
+    it 'assigns @years_months' do
+      get :index
+      expected = [%w[2024 11], %w[2024 06]]
+      expect(user.households.distinct_years_months).to eq(expected)
     end
 
     it 'assigns @q with ransack query' do
@@ -115,7 +115,7 @@ RSpec.describe HouseholdsController, type: :controller do
     end
 
     it 'calculates @total_amount_households correctly' do
-      get :index, params: { q: { transaction_type_in: 'expense' } }
+      get :index, params: { q: { filter_transaction_type: 'expense' } }
       total_amount = fixed_expense.amount + variable_expense.amount + variable_expense_same_day.amount
       expect(assigns(:total_amount_households)).to eq(total_amount)
     end
