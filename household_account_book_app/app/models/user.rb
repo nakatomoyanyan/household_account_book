@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_many :categories
   has_many :households
+  has_many :incomes_graths
   authenticates_with_sorcery!
   validates :password, length: { minimum: 5 }, confirmation: true
   validates :password_confirmation, presence: true
