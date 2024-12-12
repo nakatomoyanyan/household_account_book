@@ -1,0 +1,18 @@
+<div id="chart-this-year" style="height: 300px; width: 300px; text-align: center; color: #999; line-height: 300px; font-size: 14px; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;">Loading...</div>
+<script>
+  (function() {
+    if (document.documentElement.hasAttribute("data-turbolinks-preview")) return;
+    if (document.documentElement.hasAttribute("data-turbo-preview")) return;
+
+    var incomesGrathDataThisYear = <%= raw incomes_grath_data_this_year.to_json %>;
+
+    var createChart = function() { 
+      new Chartkick["ColumnChart"]("chart-this-year", incomesGrathDataThisYear, {}); 
+    };
+    if ("Chartkick" in window) {
+      createChart();
+    } else {
+      window.addEventListener("chartkick:load", createChart, true);
+    }
+  })();
+</script>
