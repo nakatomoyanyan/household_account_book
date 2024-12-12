@@ -29,8 +29,23 @@ class HouseholdsController < ApplicationController
   def income
     incomes = current_user.households.income
     @incomes_this_year = incomes.this_year.eager_load(:category).decorate
-    @incomes_grath_data_this_month = incomes.this_month.joins(:category).group('categories.name').sum(:amount)
-    @incomes_grath_data_this_year = incomes.this_year.group_by_month(:date, format: '%B').sum(:amount)
+    IncomesGraphDataJob.perform_later(current_user.id)
+  end
+
+  def collecting_incomes_grath_data
+    @incomes_grath_data_this_month = current_user.incomes_graths.last.grath_data_this_month
+    @incomes_grath_data_this_year = current_user.incomes_graths.last.grath_data_this_year
+    if @incomes_grath_data_this_month && @incomes_grath_data_this_year
+      html_year = render_to_string(partial: 'incomes_grath_this_year',
+                                   locals: { incomes_grath_data_this_year: @incomes_grath_data_this_year })
+      html_month = render_to_string(
+        partial: 'incomes_grath_this_month',
+        locals: { incomes_grath_data_this_month: @incomes_grath_data_this_month }
+      )
+      render json: { status: 'completed', html_year:, html_month: }
+    else
+      render json: { status: 'in_progress' }
+    end
   end
 
   def expense
