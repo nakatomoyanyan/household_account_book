@@ -20,7 +20,12 @@ async function fetchIncomesData() {
       AddedChartThisYearContainer.innerHTML = data.html_year;
       const scriptsThisYear =
         AddedChartThisYearContainer.querySelectorAll("script");
-      scriptsThisYear.forEach((script) => eval(script.innerHTML));
+      scriptsThisYear.forEach((script) => {
+        const newScript = document.createElement("script");
+        newScript.textContent = script.innerHTML;
+        document.body.appendChild(newScript);
+        document.body.removeChild(newScript);
+      });
 
       const AddedChartThisMonthContainer = document.querySelector(
         ".grath-income-this-month-content"
@@ -28,7 +33,12 @@ async function fetchIncomesData() {
       AddedChartThisMonthContainer.innerHTML = data.html_month;
       const scriptsThisMonth =
         AddedChartThisMonthContainer.querySelectorAll("script");
-      scriptsThisMonth.forEach((script) => eval(script.innerHTML));
+      scriptsThisMonth.forEach((script) => {
+        const newScript = document.createElement("script");
+        newScript.textContent = script.innerHTML;
+        document.body.appendChild(newScript);
+        document.body.removeChild(newScript);
+      });
     } else if (data.status === "in_progress") {
       console.log("データ収集中。数秒後に再試行します...");
       setTimeout(fetchIncomesData, 10000);
