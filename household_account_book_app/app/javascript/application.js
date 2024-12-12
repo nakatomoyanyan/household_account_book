@@ -1,5 +1,43 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails";
 import "controllers";
 import "chartkick";
 import "Chart.bundle";
+
+async function fetchIncomesData() {
+  try {
+    const response = await fetch("/households/collecting_incomes_grath_data");
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+
+    if (data.status === "completed") {
+      console.log("収集完了:", data);
+
+      const AddedChartThisYearContainer = document.querySelector(
+        ".grath-income-this-year-content"
+      );
+      AddedChartThisYearContainer.innerHTML = data.html_year;
+      const scriptsThisYear =
+        AddedChartThisYearContainer.querySelectorAll("script");
+      scriptsThisYear.forEach((script) => eval(script.innerHTML));
+
+      const AddedChartThisMonthContainer = document.querySelector(
+        ".grath-income-this-month-content"
+      );
+      AddedChartThisMonthContainer.innerHTML = data.html_month;
+      const scriptsThisMonth =
+        AddedChartThisMonthContainer.querySelectorAll("script");
+      scriptsThisMonth.forEach((script) => eval(script.innerHTML));
+    } else if (data.status === "in_progress") {
+      console.log("データ収集中。数秒後に再試行します...");
+      setTimeout(fetchIncomesData, 10000);
+    } else {
+      console.warn("未定義のステータス:", data.status);
+    }
+  } catch (error) {
+    console.error("エラー:", error.message);
+  }
+}
+
+fetchIncomesData();
