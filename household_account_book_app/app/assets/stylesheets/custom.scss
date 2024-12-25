@@ -294,13 +294,18 @@ header {
       border-radius: 10px;
       width: 50%;
       margin-right: 10px;
+      .grath-income-this-year-content {
+        display: flex;
+        justify-content: center;
+      }
     }
     .grath-income-this-month {
       border: 3px solid black;
       border-radius: 10px;
       width: 50%;
-      p {
-        text-align: center;
+      .grath-income-this-month-content {
+        display: flex;
+        justify-content: center;
       }
     }
   }
