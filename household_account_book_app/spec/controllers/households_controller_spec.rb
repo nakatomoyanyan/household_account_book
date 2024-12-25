@@ -13,9 +13,19 @@ RSpec.describe HouseholdsController, type: :controller do
       transaction_type: :income
     }
   end
+  let(:incomes_grath_data_this_month) { { youtube: 77_964, 'アルバイト': 146_489 } }
+  let(:incomes_grath_data_this_year) { { '1月': 569_967, '2月': 562_950 } }
+  let(:incomes_grath) do
+    double(
+      'IncomesGrath',
+      grath_data_this_month: incomes_grath_data_this_month,
+      grath_data_this_year: incomes_grath_data_this_year
+    )
+  end
 
   before do
     login_user(user)
+    allow(user).to receive_message_chain(:incomes_graths, :last).and_return(incomes_grath)
   end
 
   describe 'GET #index' do
@@ -176,23 +186,56 @@ RSpec.describe HouseholdsController, type: :controller do
       expect(assigns(:incomes_this_year)).to eq(user.households.income.this_year)
     end
 
-    it 'assigns a new incomes_grath_data_this_year' do
-      get :income
-      expect(assigns(:incomes_grath_data_this_year)).to eq(user.households.income.this_year.group_by_month(:date,
-                                                                                                           format: '%B').sum(:amount))
-    end
-
-    it 'assigns a new incomes_grath_data_this_month' do
-      get :income
-      expect(assigns(:incomes_grath_data_this_month)).to eq(user.households.income.this_month.group(:name).sum(:amount))
-    end
-
     describe 'require_login' do
       it 'redirects to root path if user is not the current user' do
         logout_user
         get :income
         expect(flash[:notice]).to eq('ログインしてください')
         expect(response).to redirect_to(root_path)
+      end
+    end
+  end
+
+  describe 'get collecting_incomes_grath_data' do
+    context 'when both monthly and yearly data are present' do
+      before do
+        allow(controller).to receive(:render_to_string).with(
+          partial: 'incomes_grath_this_year',
+          locals: { incomes_grath_data_this_year: }
+        ).and_return('<div>Yearly Income Graph</div>')
+
+        allow(controller).to receive(:render_to_string).with(
+          partial: 'incomes_grath_this_month',
+          locals: { incomes_grath_data_this_month: }
+        ).and_return('<div>Monthly Income Graph</div>')
+      end
+
+      it 'renders completed status with HTML content' do
+        get :collecting_incomes_grath_data
+        expect(response).to have_http_status(:ok)
+        json_response = response.parsed_body
+        expect(json_response['status']).to eq('completed')
+        expect(json_response['html_year']).to eq('<div>Yearly Income Graph</div>')
+        expect(json_response['html_month']).to eq('<div>Monthly Income Graph</div>')
+      end
+    end
+
+    context 'when either monthly or yearly data is missing' do
+      before do
+        allow(user).to receive_message_chain(:incomes_graths, :last).and_return(
+          double('IncomesGrath', grath_data_this_month: nil, grath_data_this_year: nil)
+        )
+      end
+
+      it 'renders in_progress status' do
+        get :collecting_incomes_grath_data
+
+        expect(response).to have_http_status(:ok)
+        json_response = response.parsed_body
+
+        expect(json_response['status']).to eq('in_progress')
+        expect(json_response['html_year']).to be_nil
+        expect(json_response['html_month']).to be_nil
       end
     end
   end
