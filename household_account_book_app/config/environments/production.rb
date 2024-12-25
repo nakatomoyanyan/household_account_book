@@ -80,6 +80,12 @@ Rails.application.configure do
 
   config.solid_queue.connects_to = { database: { writing: :queue } }
 
+  config.solid_queue.connects_to = { database: { writing: :queue } }
+
+  config.solid_queue.connects_to = { database: { writing: :queue } }
+
+  config.solid_queue.connects_to = { database: { writing: :queue } }
+
   # config.active_job.queue_name_prefix = "household_account_book_production"
 
   # Disable caching for Action Mailer templates even if Action Controller
