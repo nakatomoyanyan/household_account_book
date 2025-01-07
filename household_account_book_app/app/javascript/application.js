@@ -2,7 +2,6 @@ import "@hotwired/turbo-rails";
 import "controllers";
 import "chartkick";
 import "Chart.bundle";
-let shouldRetry = true;
 async function fetchIncomesData() {
   try {
     const response = await fetch("/households/collecting_incomes_grath_data");
