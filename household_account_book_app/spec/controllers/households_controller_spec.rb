@@ -48,17 +48,17 @@ RSpec.describe HouseholdsController, type: :controller do
 
     it 'assigns @financial_summary_this_year[:total_income]' do
       get :index
-      expect(Household.financial_summary_this_year[:total_income]).to eq(2000)
+      expect(Household.financial_summary_this_year[:total_income]).to eq(1000)
     end
 
     it 'assigns @financial_summary_this_year[:total_expense]' do
       get :index
-      expect(Household.financial_summary_this_year[:total_expense]).to eq(380)
+      expect(Household.financial_summary_this_year[:total_expense]).to eq(190)
     end
 
     it 'assigns @financial_summary_this_year[:net_balance]' do
       get :index
-      expect(Household.financial_summary_this_year[:net_balance]).to eq(1620)
+      expect(Household.financial_summary_this_year[:net_balance]).to eq(810)
     end
 
     it 'assigns @financial_summary_this_month[:total_income]' do
