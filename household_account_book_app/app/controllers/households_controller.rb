@@ -29,7 +29,10 @@ class HouseholdsController < ApplicationController
   def income
     incomes = current_user.households.income
     @incomes_this_year = incomes.this_year.eager_load(:category).decorate
-    IncomesGraphDataJob.perform_later(current_user.id)
+    if incomes.maximum(:updated_at) > current_user.incomes_last_checked_at
+      IncomesGraphDataJob.perform_later(current_user.id)
+      current_user.update_columns(incomes_last_checked_at: Time.current)
+    end
   end
 
   def collecting_incomes_grath_data
