@@ -181,9 +181,19 @@ RSpec.describe HouseholdsController, type: :controller do
   end
 
   describe 'get #income' do
-    it 'assigns a new index_income_this_year' do
+    let!(:income) do
+      create(:household, transaction_type: 0, date: Date.new(2024, 11, 10), amount: 4000, user:, category:, updated_at: '2025-01-08 00:00:00')
+    end
+    it 'assigns a new @incomes_this_year' do
       get :income
       expect(assigns(:incomes_this_year)).to eq(user.households.income.this_year)
+    end
+
+    it 'updates incomes_last_checked_at to the current time' do
+      old_incomes_last_checked_at = user.incomes_last_checked_at
+      get :income
+      expect(user.reload.incomes_last_checked_at).not_to eq(old_incomes_last_checked_at)
+      expect(user.incomes_last_checked_at).to be_within(1.second).of(Time.current)
     end
 
     describe 'require_login' do
