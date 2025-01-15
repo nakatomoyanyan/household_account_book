@@ -29,25 +29,20 @@ class HouseholdsController < ApplicationController
   def income
     incomes = current_user.households.income
     @incomes_this_year = incomes.this_year.eager_load(:category).decorate
-    if incomes.maximum(:updated_at) > current_user.incomes_last_checked_at
+    incomes_updated_at = current_user.households.income.maximum(:updated_at)
+    latest_grath_data = current_user.incomes_graths.last
+    return unless latest_grath_data.nil? || incomes_updated_at > latest_grath_data.updated_at
+
       IncomesGraphDataJob.perform_later(current_user.id)
-      current_user.update_columns(incomes_last_checked_at: Time.current)
-    end
   end
 
   def collecting_incomes_grath_data
-    @incomes_grath_data_this_month = current_user.incomes_graths.last.grath_data_this_month
-    @incomes_grath_data_this_year = current_user.incomes_graths.last.grath_data_this_year
-    if @incomes_grath_data_this_month && @incomes_grath_data_this_year
-      html_year = render_to_string(partial: 'incomes_grath_this_year',
-                                   locals: { incomes_grath_data_this_year: @incomes_grath_data_this_year })
-      html_month = render_to_string(
-        partial: 'incomes_grath_this_month',
-        locals: { incomes_grath_data_this_month: @incomes_grath_data_this_month }
-      )
-      render json: { status: 'completed', html_year:, html_month: }
-    else
+    incomes_updated_at = current_user.households.income.maximum(:updated_at)
+    latest_grath_data = current_user.incomes_graths.last
+    if latest_grath_data.nil? || incomes_updated_at >= latest_grath_data.updated_at
       render json: { status: 'in_progress' }
+    else
+      render_incomes_grath_data(latest_grath_data)
     end
   end
 
@@ -67,5 +62,13 @@ class HouseholdsController < ApplicationController
 
   def household_params
     params.require(:household).permit(:name, :date, :amount, :category_id, :transaction_type)
+  end
+
+  def render_incomes_grath_data(_grath, status: 'completed')
+    html_year = render_to_string(partial: 'incomes_grath_this_year',
+                                 locals: { incomes_grath_data_this_year: current_user.incomes_graths.last.grath_data_this_year })
+    html_month = render_to_string(partial: 'incomes_grath_this_month',
+                                  locals: { incomes_grath_data_this_month: current_user.incomes_graths.last.grath_data_this_month })
+    render json: { status:, html_year:, html_month: }
   end
 end
