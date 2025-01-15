@@ -35,11 +35,10 @@ class HouseholdsController < ApplicationController
   end
 
   def collecting_incomes_grath_data
-    latest_grath_data = current_user.incomes_grath
     if should_update_incomes_grath?
       render json: { status: 'in_progress' }
     else
-      render_incomes_grath_data(latest_grath_data)
+      render_incomes_grath_data(current_user.incomes_grath)
     end
   end
 
@@ -69,9 +68,11 @@ class HouseholdsController < ApplicationController
     render json: { status:, html_year:, html_month: }
   end
 
-  def should_update_incomes_grath?
-    return true if current_user.incomes_grath.updated_at.nil?
+  def should_update_incomes_graths?
+    incomes_updated_at = current_user.households.income.maximum(:updated_at)
+    latest_grath_data_updated_at = current_user.incomes_graths.updated_at
+    return true if latest_grath_data_updated_at.nil?
 
-    current_user.households.income.maximum(:updated_at) >= current_user.incomes_grath.updated_at
+    incomes_updated_at >= latest_grath_data_updated_at
   end
 end
