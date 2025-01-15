@@ -13,19 +13,9 @@ RSpec.describe HouseholdsController, type: :controller do
       transaction_type: :income
     }
   end
-  let(:incomes_grath_data_this_month) { { youtube: 77_964, 'アルバイト': 146_489 } }
-  let(:incomes_grath_data_this_year) { { '1月': 569_967, '2月': 562_950 } }
-  let(:incomes_grath) do
-    double(
-      'IncomesGrath',
-      grath_data_this_month: incomes_grath_data_this_month,
-      grath_data_this_year: incomes_grath_data_this_year
-    )
-  end
 
   before do
     login_user(user)
-    allow(user).to receive_message_chain(:incomes_graths, :last).and_return(incomes_grath)
   end
 
   describe 'GET #index' do
@@ -182,18 +172,24 @@ RSpec.describe HouseholdsController, type: :controller do
 
   describe 'get #income' do
     let!(:income) do
-      create(:household, transaction_type: 0, date: Date.new(2024, 11, 10), amount: 4000, user:, category:, updated_at: '2025-01-08 00:00:00')
+      create(:household, transaction_type: 0, date: Date.new(2024, 11, 10), amount: 4000, user:, category:,
+                         updated_at: '2025-01-08 00:00:00')
     end
+    let(:incomes_grath_data_this_month) { { youtube: 77_964, 'アルバイト': 146_489 } }
+    let(:incomes_grath_data_this_year) { { '1月': 569_967, '2月': 562_950 } }
+    let!(:mock_latest_grath_data) do
+      create(
+        :incomes_grath,
+        user:,
+        grath_data_this_month: incomes_grath_data_this_month,
+        grath_data_this_year: incomes_grath_data_this_year,
+        updated_at: Time.zone.now
+      )
+    end
+
     it 'assigns a new @incomes_this_year' do
       get :income
       expect(assigns(:incomes_this_year)).to eq(user.households.income.this_year)
-    end
-
-    it 'updates incomes_last_checked_at to the current time' do
-      old_incomes_last_checked_at = user.incomes_last_checked_at
-      get :income
-      expect(user.reload.incomes_last_checked_at).not_to eq(old_incomes_last_checked_at)
-      expect(user.incomes_last_checked_at).to be_within(1.second).of(Time.current)
     end
 
     describe 'require_login' do
@@ -206,46 +202,62 @@ RSpec.describe HouseholdsController, type: :controller do
     end
   end
 
-  describe 'get collecting_incomes_grath_data' do
-    context 'when both monthly and yearly data are present' do
-      before do
-        allow(controller).to receive(:render_to_string).with(
-          partial: 'incomes_grath_this_year',
-          locals: { incomes_grath_data_this_year: }
-        ).and_return('<div>Yearly Income Graph</div>')
-
-        allow(controller).to receive(:render_to_string).with(
-          partial: 'incomes_grath_this_month',
-          locals: { incomes_grath_data_this_month: }
-        ).and_return('<div>Monthly Income Graph</div>')
-      end
-
-      it 'renders completed status with HTML content' do
-        get :collecting_incomes_grath_data
-        expect(response).to have_http_status(:ok)
-        json_response = response.parsed_body
-        expect(json_response['status']).to eq('completed')
-        expect(json_response['html_year']).to eq('<div>Yearly Income Graph</div>')
-        expect(json_response['html_month']).to eq('<div>Monthly Income Graph</div>')
-      end
+  describe 'GET #collecting_incomes_grath_data' do
+    let(:incomes_grath_data_this_month) { { youtube: 77_964, 'アルバイト': 146_489 } }
+    let(:incomes_grath_data_this_year) { { '1月': 569_967, '2月': 562_950 } }
+    let!(:new_income_data) do
+      create(:household, transaction_type: 0, date: Date.new(2025, 1, 7), amount: 4000, user:, category:,
+                         updated_at: '2025-01-08 00:00:00')
     end
 
-    context 'when either monthly or yearly data is missing' do
-      before do
-        allow(user).to receive_message_chain(:incomes_graths, :last).and_return(
-          double('IncomesGrath', grath_data_this_month: nil, grath_data_this_year: nil)
+    context 'when incomes_updated_at is greater than or equal to latest_grath_data.updated_at' do
+      let!(:mock_latest_grath_data) do
+        create(
+          :incomes_grath,
+          user:,
+          grath_data_this_month: incomes_grath_data_this_month,
+          grath_data_this_year: incomes_grath_data_this_year,
+          updated_at: '2025-01-07 00:00:00'
         )
       end
 
       it 'renders in_progress status' do
         get :collecting_incomes_grath_data
+        expect(response).to have_http_status(:ok)
+        json_response = response.parsed_body
+        expect(json_response['status']).to eq('in_progress')
+      end
+    end
+
+    context 'when incomes_updated_at is less than latest_grath_data.updated_at' do
+      let!(:mock_latest_grath_data) do
+        create(
+          :incomes_grath,
+          user:,
+          grath_data_this_month: incomes_grath_data_this_month,
+          grath_data_this_year: incomes_grath_data_this_year,
+          updated_at: '2025-01-09 00:00:00'
+        )
+      end
+
+      it 'renders completed status with HTML content' do
+        allow(controller).to receive(:render_to_string).with(
+          partial: 'incomes_grath_this_year',
+          locals: { incomes_grath_data_this_year: mock_latest_grath_data.grath_data_this_year }
+        ).and_return('<div>Yearly Income Graph</div>')
+
+        allow(controller).to receive(:render_to_string).with(
+          partial: 'incomes_grath_this_month',
+          locals: { incomes_grath_data_this_month: mock_latest_grath_data.grath_data_this_month }
+        ).and_return('<div>Monthly Income Graph</div>')
+
+        get :collecting_incomes_grath_data
 
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
-
-        expect(json_response['status']).to eq('in_progress')
-        expect(json_response['html_year']).to be_nil
-        expect(json_response['html_month']).to be_nil
+        expect(json_response['status']).to eq('completed')
+        expect(json_response['html_year']).to eq('<div>Yearly Income Graph</div>')
+        expect(json_response['html_month']).to eq('<div>Monthly Income Graph</div>')
       end
     end
   end
