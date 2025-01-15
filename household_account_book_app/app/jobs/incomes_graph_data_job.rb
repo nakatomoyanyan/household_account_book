@@ -7,8 +7,8 @@ class IncomesGraphDataJob < ApplicationJob
     incomes = current_user.households.income
     incomes_grath_data_this_month = incomes.this_month.joins(:category).group('categories.name').sum(:amount)
     incomes_grath_data_this_year = incomes.this_year.group_by_month(:date, format: '%B').sum(:amount)
-    IncomesGrath.create!(
-      user: current_user,
+    incomes_grath = IncomesGrath.find_or_initialize_by(user: current_user)
+    incomes_grath.update!(
       grath_data_this_month: incomes_grath_data_this_month,
       grath_data_this_year: incomes_grath_data_this_year
     )
