@@ -68,9 +68,9 @@ class HouseholdsController < ApplicationController
     render json: { status:, html_year:, html_month: }
   end
 
-  def should_update_incomes_graths?
+  def should_update_incomes_grath?
     incomes_updated_at = current_user.households.income.maximum(:updated_at)
-    latest_grath_data_updated_at = current_user.incomes_graths.updated_at
+    latest_grath_data_updated_at = current_user.incomes_grath.updated_at
     return true if latest_grath_data_updated_at.nil?
 
     incomes_updated_at >= latest_grath_data_updated_at
