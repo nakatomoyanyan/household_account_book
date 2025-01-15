@@ -29,14 +29,14 @@ class HouseholdsController < ApplicationController
   def income
     incomes = current_user.households.income
     @incomes_this_year = incomes.this_year.eager_load(:category).decorate
-    return unless should_update_incomes_graths?
+    return unless should_update_incomes_grath?
 
       IncomesGraphDataJob.perform_later(current_user.id)
   end
 
   def collecting_incomes_grath_data
-    latest_grath_data = current_user.incomes_graths
-    if should_update_incomes_graths?
+    latest_grath_data = current_user.incomes_grath
+    if should_update_incomes_grath?
       render json: { status: 'in_progress' }
     else
       render_incomes_grath_data(latest_grath_data)
@@ -63,15 +63,15 @@ class HouseholdsController < ApplicationController
 
   def render_incomes_grath_data(_grath, status: 'completed')
     html_year = render_to_string(partial: 'incomes_grath_this_year',
-                                 locals: { incomes_grath_data_this_year: current_user.incomes_graths.grath_data_this_year })
+                                 locals: { incomes_grath_data_this_year: current_user.incomes_grath.grath_data_this_year })
     html_month = render_to_string(partial: 'incomes_grath_this_month',
-                                  locals: { incomes_grath_data_this_month: current_user.incomes_graths.grath_data_this_month })
+                                  locals: { incomes_grath_data_this_month: current_user.incomes_grath.grath_data_this_month })
     render json: { status:, html_year:, html_month: }
   end
 
-  def should_update_incomes_graths?
-    return true if current_user.incomes_graths.updated_at.nil?
+  def should_update_incomes_grath?
+    return true if current_user.incomes_grath.updated_at.nil?
 
-    current_user.households.income.maximum(:updated_at) >= current_user.incomes_graths.updated_at
+    current_user.households.income.maximum(:updated_at) >= current_user.incomes_grath.updated_at
   end
 end
