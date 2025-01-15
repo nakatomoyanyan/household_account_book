@@ -27,7 +27,7 @@ async function fetchIncomesData() {
       executeScriptsFromContainer(AddedChartThisMonthContainer);
     } else if (data.status === "in_progress") {
       console.log("データ収集中。数秒後に再試行します...");
-      setTimeout(fetchIncomesData(), 10000);
+      setTimeout(() => fetchIncomesData(), 1000);
     } else {
       console.warn("未定義のステータス:", data.status);
     }
