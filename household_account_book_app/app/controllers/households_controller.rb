@@ -70,10 +70,8 @@ class HouseholdsController < ApplicationController
   end
 
   def should_update_incomes_graths?
-    incomes_updated_at = current_user.households.income.maximum(:updated_at)
-    latest_grath_data_updated_at = current_user.incomes_graths.updated_at
-    return true if latest_grath_data_updated_at.nil?
+    return true if current_user.incomes_graths.updated_at.nil?
 
-    incomes_updated_at >= latest_grath_data_updated_at
+    current_user.households.income.maximum(:updated_at) >= current_user.incomes_graths.updated_at
   end
 end
