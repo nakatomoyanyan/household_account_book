@@ -32,13 +32,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_08_044200) do
     t.index ["user_id"], name: "index_households_on_user_id"
   end
 
-  create_table "incomes_graths", force: :cascade do |t|
+  create_table "incomes_graphs", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.json "grath_data_this_month"
-    t.json "grath_data_this_year"
+    t.json "graph_data_this_month"
+    t.json "graph_data_this_year"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_incomes_graths_on_user_id"
+    t.index ["user_id"], name: "index_incomes_graphs_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -54,5 +54,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_08_044200) do
   add_foreign_key "categories", "users"
   add_foreign_key "households", "categories"
   add_foreign_key "households", "users"
-  add_foreign_key "incomes_graths", "users"
+  add_foreign_key "incomes_graphs", "users"
 end

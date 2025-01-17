@@ -4,10 +4,10 @@
     if (document.documentElement.hasAttribute("data-turbolinks-preview")) return;
     if (document.documentElement.hasAttribute("data-turbo-preview")) return;
 
-    var incomesGrathDataThisYear = <%= raw incomes_grath_data_this_year.to_json %>;
+    var incomesgraphDataThisYear = <%= raw incomes_graph_data_this_year.to_json %>;
 
     var createChart = function() { 
-      new Chartkick["ColumnChart"]("chart-this-year", incomesGrathDataThisYear, {}); 
+      new Chartkick["ColumnChart"]("chart-this-year", incomesgraphDataThisYear, {}); 
     };
     if ("Chartkick" in window) {
       createChart();

@@ -175,14 +175,14 @@ RSpec.describe HouseholdsController, type: :controller do
       create(:household, transaction_type: 0, date: Date.new(2024, 11, 10), amount: 4000, user:, category:,
                          updated_at: '2025-01-08 00:00:00')
     end
-    let(:incomes_grath_data_this_month) { { youtube: 77_964, 'アルバイト': 146_489 } }
-    let(:incomes_grath_data_this_year) { { '1月': 569_967, '2月': 562_950 } }
-    let!(:mock_latest_grath_data) do
+    let(:incomes_graph_data_this_month) { { youtube: 77_964, 'アルバイト': 146_489 } }
+    let(:incomes_graph_data_this_year) { { '1月': 569_967, '2月': 562_950 } }
+    let!(:mock_latest_graph_data) do
       create(
-        :incomes_grath,
+        :incomes_graph,
         user:,
-        grath_data_this_month: incomes_grath_data_this_month,
-        grath_data_this_year: incomes_grath_data_this_year,
+        graph_data_this_month: incomes_graph_data_this_month,
+        graph_data_this_year: incomes_graph_data_this_year,
         updated_at: Time.zone.now
       )
     end
@@ -202,56 +202,56 @@ RSpec.describe HouseholdsController, type: :controller do
     end
   end
 
-  describe 'GET #collecting_incomes_grath_data' do
-    let(:incomes_grath_data_this_month) { { youtube: 77_964, 'アルバイト': 146_489 } }
-    let(:incomes_grath_data_this_year) { { '1月': 569_967, '2月': 562_950 } }
+  describe 'GET #collecting_incomes_graph_data' do
+    let(:incomes_graph_data_this_month) { { youtube: 77_964, 'アルバイト': 146_489 } }
+    let(:incomes_graph_data_this_year) { { '1月': 569_967, '2月': 562_950 } }
     let!(:new_income_data) do
       create(:household, transaction_type: 0, date: Date.new(2025, 1, 7), amount: 4000, user:, category:,
                          updated_at: '2025-01-08 00:00:00')
     end
 
-    context 'when incomes_updated_at is greater than or equal to latest_grath_data.updated_at' do
-      let!(:mock_latest_grath_data) do
+    context 'when incomes_updated_at is greater than or equal to latest_graph_data.updated_at' do
+      let!(:mock_latest_graph_data) do
         create(
-          :incomes_grath,
+          :incomes_graph,
           user:,
-          grath_data_this_month: incomes_grath_data_this_month,
-          grath_data_this_year: incomes_grath_data_this_year,
+          graph_data_this_month: incomes_graph_data_this_month,
+          graph_data_this_year: incomes_graph_data_this_year,
           updated_at: '2025-01-07 00:00:00'
         )
       end
 
       it 'renders in_progress status' do
-        get :collecting_incomes_grath_data
+        get :collecting_incomes_graph_data
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
         expect(json_response['status']).to eq('in_progress')
       end
     end
 
-    context 'when incomes_updated_at is less than latest_grath_data.updated_at' do
-      let!(:mock_latest_grath_data) do
+    context 'when incomes_updated_at is less than latest_graph_data.updated_at' do
+      let!(:mock_latest_graph_data) do
         create(
-          :incomes_grath,
+          :incomes_graph,
           user:,
-          grath_data_this_month: incomes_grath_data_this_month,
-          grath_data_this_year: incomes_grath_data_this_year,
+          graph_data_this_month: incomes_graph_data_this_month,
+          graph_data_this_year: incomes_graph_data_this_year,
           updated_at: '2025-01-09 00:00:00'
         )
       end
 
       it 'renders completed status with HTML content' do
         allow(controller).to receive(:render_to_string).with(
-          partial: 'incomes_grath_this_year',
-          locals: { incomes_grath_data_this_year: mock_latest_grath_data.grath_data_this_year }
+          partial: 'incomes_graph_this_year',
+          locals: { incomes_graph_data_this_year: mock_latest_graph_data.graph_data_this_year }
         ).and_return('<div>Yearly Income Graph</div>')
 
         allow(controller).to receive(:render_to_string).with(
-          partial: 'incomes_grath_this_month',
-          locals: { incomes_grath_data_this_month: mock_latest_grath_data.grath_data_this_month }
+          partial: 'incomes_graph_this_month',
+          locals: { incomes_graph_data_this_month: mock_latest_graph_data.graph_data_this_month }
         ).and_return('<div>Monthly Income Graph</div>')
 
-        get :collecting_incomes_grath_data
+        get :collecting_incomes_graph_data
 
         expect(response).to have_http_status(:ok)
         json_response = response.parsed_body
@@ -268,19 +268,19 @@ RSpec.describe HouseholdsController, type: :controller do
       expect(assigns(:all_expenses_this_year)).to eq(user.households.all_expense.this_year)
     end
 
-    it 'assigns a new expenses_grath_data_this_month' do
+    it 'assigns a new expenses_graph_data_this_month' do
       get :expense
-      expect(assigns(:all_expenses_grath_data_this_month)).to eq(user.households.all_expense.this_month.group(:name).sum(:amount))
-      expect(assigns(:fixed_expenses_grath_data_this_month)).to eq(user.households.fixed_expense.this_month.group(:name).sum(:amount))
-      expect(assigns(:variable_expenses_grath_data_this_month)).to eq(user.households.variable_expense.this_month.group(:name).sum(:amount))
+      expect(assigns(:all_expenses_graph_data_this_month)).to eq(user.households.all_expense.this_month.group(:name).sum(:amount))
+      expect(assigns(:fixed_expenses_graph_data_this_month)).to eq(user.households.fixed_expense.this_month.group(:name).sum(:amount))
+      expect(assigns(:variable_expenses_graph_data_this_month)).to eq(user.households.variable_expense.this_month.group(:name).sum(:amount))
     end
 
-    it 'assigns a new expenses_grath_data_this_year' do
+    it 'assigns a new expenses_graph_data_this_year' do
       get :expense
       fixed_expenses_data = user.households.fixed_expense.this_year.group_by_month(:date, format: '%B').sum(:amount)
       variable_expenses_data = user.households.variable_expense.this_year.group_by_month(:date,
                                                                                          format: '%B').sum(:amount)
-      expect(assigns(:expenses_grath_data_this_year)).to eq([{ name: '固定費', data: fixed_expenses_data },
+      expect(assigns(:expenses_graph_data_this_year)).to eq([{ name: '固定費', data: fixed_expenses_data },
                                                              { name: '流動費', data: variable_expenses_data }])
     end
 

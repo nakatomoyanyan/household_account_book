@@ -4,7 +4,7 @@ import "chartkick";
 import "Chart.bundle";
 async function fetchIncomesData() {
   try {
-    const response = await fetch("/households/collecting_incomes_grath_data");
+    const response = await fetch("/households/collecting_incomes_graph_data");
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -14,12 +14,12 @@ async function fetchIncomesData() {
       console.log("収集完了:", data);
 
       const AddedChartThisYearContainer = document.querySelector(
-        ".grath-income-this-year-content"
+        ".graph-income-this-year-content"
       );
       AddedChartThisYearContainer.innerHTML = data.html_year;
 
       const AddedChartThisMonthContainer = document.querySelector(
-        ".grath-income-this-month-content"
+        ".graph-income-this-month-content"
       );
       AddedChartThisMonthContainer.innerHTML = data.html_month;
 

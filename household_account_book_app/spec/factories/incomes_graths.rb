@@ -1,7 +1,7 @@
 FactoryBot.define do
-  factory :incomes_grath do
+  factory :incomes_graph do
     user
-    grath_data_this_month { {} }
-    grath_data_this_year { {} }
+    graph_data_this_month { {} }
+    graph_data_this_year { {} }
   end
 end
