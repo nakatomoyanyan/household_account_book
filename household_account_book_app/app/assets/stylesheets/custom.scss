@@ -283,22 +283,30 @@ header {
   display: flex;
   float: left;
   flex-direction: column;
-  .grath {
+  .graph {
     display: flex;
     float: left;
     width: 100%;
     height: 500px;
     margin-bottom: 10px;
-    .grath-income-this-year {
+    .graph-income-this-year {
       border: 3px solid black;
       border-radius: 10px;
       width: 50%;
       margin-right: 10px;
+      .graph-income-this-year-content {
+        display: flex;
+        justify-content: center;
+      }
     }
-    .grath-income-this-month {
+    .graph-income-this-month {
       border: 3px solid black;
       border-radius: 10px;
       width: 50%;
+      .graph-income-this-month-content {
+        display: flex;
+        justify-content: center;
+      }
     }
   }
   .index-income {
@@ -325,25 +333,25 @@ header {
   display: flex;
   float: left;
   flex-direction: column;
-  .grath {
+  .graph {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     width: 100%;
     height: 1000px;
-    .grath-expense-this-year {
+    .graph-expense-this-year {
       border: 3px solid black;
       border-radius: 10px;
     }
-    .grath-net-expense-this-month {
+    .graph-net-expense-this-month {
       border: 3px solid black;
       border-radius: 10px;
     }
-    .grath-fixed_expense-his-year {
+    .graph-fixed_expense-his-year {
       border: 3px solid black;
       border-radius: 10px;
     }
-    .grath-variable_expense-this-month {
+    .graph-variable_expense-this-month {
       border: 3px solid black;
       border-radius: 10px;
     }

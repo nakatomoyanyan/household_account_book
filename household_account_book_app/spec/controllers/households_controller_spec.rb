@@ -38,17 +38,17 @@ RSpec.describe HouseholdsController, type: :controller do
 
     it 'assigns @financial_summary_this_year[:total_income]' do
       get :index
-      expect(Household.financial_summary_this_year[:total_income]).to eq(2000)
+      expect(Household.financial_summary_this_year[:total_income]).to eq(1000)
     end
 
     it 'assigns @financial_summary_this_year[:total_expense]' do
       get :index
-      expect(Household.financial_summary_this_year[:total_expense]).to eq(380)
+      expect(Household.financial_summary_this_year[:total_expense]).to eq(190)
     end
 
     it 'assigns @financial_summary_this_year[:net_balance]' do
       get :index
-      expect(Household.financial_summary_this_year[:net_balance]).to eq(1620)
+      expect(Household.financial_summary_this_year[:net_balance]).to eq(810)
     end
 
     it 'assigns @financial_summary_this_month[:total_income]' do
@@ -171,20 +171,25 @@ RSpec.describe HouseholdsController, type: :controller do
   end
 
   describe 'get #income' do
-    it 'assigns a new index_income_this_year' do
+    let!(:income) do
+      create(:household, transaction_type: 0, date: Date.new(2024, 11, 10), amount: 4000, user:, category:,
+                         updated_at: '2025-01-08 00:00:00')
+    end
+    let(:incomes_graph_data_this_month) { { youtube: 77_964, 'アルバイト': 146_489 } }
+    let(:incomes_graph_data_this_year) { { '1月': 569_967, '2月': 562_950 } }
+    let!(:mock_latest_graph_data) do
+      create(
+        :incomes_graph,
+        user:,
+        graph_data_this_month: incomes_graph_data_this_month,
+        graph_data_this_year: incomes_graph_data_this_year,
+        updated_at: Time.zone.now
+      )
+    end
+
+    it 'assigns a new @incomes_this_year' do
       get :income
       expect(assigns(:incomes_this_year)).to eq(user.households.income.this_year)
-    end
-
-    it 'assigns a new incomes_grath_data_this_year' do
-      get :income
-      expect(assigns(:incomes_grath_data_this_year)).to eq(user.households.income.this_year.group_by_month(:date,
-                                                                                                           format: '%B').sum(:amount))
-    end
-
-    it 'assigns a new incomes_grath_data_this_month' do
-      get :income
-      expect(assigns(:incomes_grath_data_this_month)).to eq(user.households.income.this_month.group(:name).sum(:amount))
     end
 
     describe 'require_login' do
@@ -197,25 +202,85 @@ RSpec.describe HouseholdsController, type: :controller do
     end
   end
 
+  describe 'GET #collecting_incomes_graph_data' do
+    let(:incomes_graph_data_this_month) { { youtube: 77_964, 'アルバイト': 146_489 } }
+    let(:incomes_graph_data_this_year) { { '1月': 569_967, '2月': 562_950 } }
+    let!(:new_income_data) do
+      create(:household, transaction_type: 0, date: Date.new(2025, 1, 7), amount: 4000, user:, category:,
+                         updated_at: '2025-01-08 00:00:00')
+    end
+
+    context 'when incomes_updated_at is greater than or equal to latest_graph_data.updated_at' do
+      let!(:mock_latest_graph_data) do
+        create(
+          :incomes_graph,
+          user:,
+          graph_data_this_month: incomes_graph_data_this_month,
+          graph_data_this_year: incomes_graph_data_this_year,
+          updated_at: '2025-01-07 00:00:00'
+        )
+      end
+
+      it 'renders in_progress status' do
+        get :collecting_incomes_graph_data
+        expect(response).to have_http_status(:ok)
+        json_response = response.parsed_body
+        expect(json_response['status']).to eq('in_progress')
+      end
+    end
+
+    context 'when incomes_updated_at is less than latest_graph_data.updated_at' do
+      let!(:mock_latest_graph_data) do
+        create(
+          :incomes_graph,
+          user:,
+          graph_data_this_month: incomes_graph_data_this_month,
+          graph_data_this_year: incomes_graph_data_this_year,
+          updated_at: '2025-01-09 00:00:00'
+        )
+      end
+
+      it 'renders completed status with HTML content' do
+        allow(controller).to receive(:render_to_string).with(
+          partial: 'incomes_graph_this_year',
+          locals: { incomes_graph_data_this_year: mock_latest_graph_data.graph_data_this_year }
+        ).and_return('<div>Yearly Income Graph</div>')
+
+        allow(controller).to receive(:render_to_string).with(
+          partial: 'incomes_graph_this_month',
+          locals: { incomes_graph_data_this_month: mock_latest_graph_data.graph_data_this_month }
+        ).and_return('<div>Monthly Income Graph</div>')
+
+        get :collecting_incomes_graph_data
+
+        expect(response).to have_http_status(:ok)
+        json_response = response.parsed_body
+        expect(json_response['status']).to eq('completed')
+        expect(json_response['html_year']).to eq('<div>Yearly Income Graph</div>')
+        expect(json_response['html_month']).to eq('<div>Monthly Income Graph</div>')
+      end
+    end
+  end
+
   describe 'get #expense' do
     it 'assigns a new all_expenses_this_year' do
       get :expense
       expect(assigns(:all_expenses_this_year)).to eq(user.households.all_expense.this_year)
     end
 
-    it 'assigns a new expenses_grath_data_this_month' do
+    it 'assigns a new expenses_graph_data_this_month' do
       get :expense
-      expect(assigns(:all_expenses_grath_data_this_month)).to eq(user.households.all_expense.this_month.group(:name).sum(:amount))
-      expect(assigns(:fixed_expenses_grath_data_this_month)).to eq(user.households.fixed_expense.this_month.group(:name).sum(:amount))
-      expect(assigns(:variable_expenses_grath_data_this_month)).to eq(user.households.variable_expense.this_month.group(:name).sum(:amount))
+      expect(assigns(:all_expenses_graph_data_this_month)).to eq(user.households.all_expense.this_month.group(:name).sum(:amount))
+      expect(assigns(:fixed_expenses_graph_data_this_month)).to eq(user.households.fixed_expense.this_month.group(:name).sum(:amount))
+      expect(assigns(:variable_expenses_graph_data_this_month)).to eq(user.households.variable_expense.this_month.group(:name).sum(:amount))
     end
 
-    it 'assigns a new expenses_grath_data_this_year' do
+    it 'assigns a new expenses_graph_data_this_year' do
       get :expense
       fixed_expenses_data = user.households.fixed_expense.this_year.group_by_month(:date, format: '%B').sum(:amount)
       variable_expenses_data = user.households.variable_expense.this_year.group_by_month(:date,
                                                                                          format: '%B').sum(:amount)
-      expect(assigns(:expenses_grath_data_this_year)).to eq([{ name: '固定費', data: fixed_expenses_data },
+      expect(assigns(:expenses_graph_data_this_year)).to eq([{ name: '固定費', data: fixed_expenses_data },
                                                              { name: '流動費', data: variable_expenses_data }])
     end
 

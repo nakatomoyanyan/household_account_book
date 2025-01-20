@@ -25,7 +25,7 @@ end
   100.times do
     Household.create!(
       user: user,
-      date: Date.new(2024, month, rand(1..28)),
+      date: Date.new(2025, month, rand(1..28)),
       transaction_type: 0,
       category_id: income_categories.sample.id,
       amount: rand(1_000..10_000)
@@ -35,7 +35,7 @@ end
   100.times do
     Household.create!(
       user: user,
-      date: Date.new(2024, month, rand(1..28)),
+      date: Date.new(2025, month, rand(1..28)),
       transaction_type: [1, 2].sample, 
       category_id: expense_categories.sample.id,
       amount: rand(100..1_000)

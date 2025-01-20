@@ -29,19 +29,28 @@ class HouseholdsController < ApplicationController
   def income
     incomes = current_user.households.income
     @incomes_this_year = incomes.this_year.eager_load(:category).decorate
-    @incomes_grath_data_this_month = incomes.this_month.joins(:category).group('categories.name').sum(:amount)
-    @incomes_grath_data_this_year = incomes.this_year.group_by_month(:date, format: '%B').sum(:amount)
+    return unless should_update_incomes_graph?
+
+      IncomesGraphDataJob.perform_later(current_user.id)
+  end
+
+  def collecting_incomes_graph_data
+    if should_update_incomes_graph?
+      render json: { status: 'in_progress' }
+    else
+      render_incomes_graph_data(current_user.incomes_graph)
+    end
   end
 
   def expense
     households = current_user.households
     @all_expenses_this_year = households.all_expense.this_year.eager_load(:category).decorate
-    @all_expenses_grath_data_this_month = households.all_expense.this_month.joins(:category).group('categories.name').sum(:amount)
-    @fixed_expenses_grath_data_this_month = households.fixed_expense.this_month.joins(:category).group('categories.name').sum(:amount)
-    @variable_expenses_grath_data_this_month = households.variable_expense.this_month.joins(:category).group('categories.name').sum(:amount)
+    @all_expenses_graph_data_this_month = households.all_expense.this_month.joins(:category).group('categories.name').sum(:amount)
+    @fixed_expenses_graph_data_this_month = households.fixed_expense.this_month.joins(:category).group('categories.name').sum(:amount)
+    @variable_expenses_graph_data_this_month = households.variable_expense.this_month.joins(:category).group('categories.name').sum(:amount)
     fixed_expenses_data = households.fixed_expense.this_year.group_by_month(:date, format: '%B').sum(:amount)
     variable_expenses_data = households.variable_expense.this_year.group_by_month(:date, format: '%B').sum(:amount)
-    @expenses_grath_data_this_year = [{ name: '固定費', data: fixed_expenses_data },
+    @expenses_graph_data_this_year = [{ name: '固定費', data: fixed_expenses_data },
                                       { name: '流動費', data: variable_expenses_data }]
   end
 
@@ -49,5 +58,21 @@ class HouseholdsController < ApplicationController
 
   def household_params
     params.require(:household).permit(:name, :date, :amount, :category_id, :transaction_type)
+  end
+
+  def render_incomes_graph_data(_graph_data, status: 'completed')
+    html_year = render_to_string(partial: 'incomes_graph_this_year',
+                                 locals: { incomes_graph_data_this_year: current_user.incomes_graph.graph_data_this_year })
+    html_month = render_to_string(partial: 'incomes_graph_this_month',
+                                  locals: { incomes_graph_data_this_month: current_user.incomes_graph.graph_data_this_month })
+    render json: { status:, html_year:, html_month: }
+  end
+
+  def should_update_incomes_graph?
+    incomes_updated_at = current_user.households.income.maximum(:updated_at)
+    latest_graph_data = current_user.incomes_graph
+    return true if latest_graph_data.nil?
+
+    incomes_updated_at >= latest_graph_data.updated_at
   end
 end

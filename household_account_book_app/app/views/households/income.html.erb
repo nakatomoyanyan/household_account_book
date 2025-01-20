@@ -2,14 +2,18 @@
 <body>
     <div class="container">
         <div class="income-page">
-            <div class="grath">
-                <div class="grath-income-this-year">
+            <div class="graph">
+                <div class="graph-income-this-year">
                     <h1>今年の収入のグラフ</h1>
-                    <%= column_chart @incomes_grath_data_this_year, xtitle: "月", ytitle: "収入", height: "300px" %>
+                    <div class="graph-income-this-year-content">
+                        <p>データ集計中</p>
+                    </div>
                 </div>
-                <div class="grath-income-this-month">
+                <div class="graph-income-this-month">
                     <h1>今月の収入のグラフ</h1>
-                    <%= pie_chart @incomes_grath_data_this_month, height: "300px" %>
+                    <div class="graph-income-this-month-content">
+                        <p>データ集計中</p>
+                    </div>
                 </div>
             </div>
             <div class="index-income">

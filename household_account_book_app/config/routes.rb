@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     collection do
       get :income
       get :expense
+      get :collecting_incomes_graph_data
     end
   end
 end
