@@ -43,6 +43,11 @@ RSpec.describe Household, type: :model do
   end
 
   describe 'validations' do
+    let(:expense) do
+      create(:household, transaction_type: 1, date: Time.current, amount: 1000, user:,
+                         category:)
+    end
+
     it 'is valid with valid attributes' do
       household.name = 'food'
       household.date = Time.zone.today
@@ -69,11 +74,6 @@ RSpec.describe Household, type: :model do
     it 'is not valid with a name longer than 20 characters' do
       household.name = 'A' * 21
       expect(household).not_to be_valid
-    end
-
-    let(:expense) do
-      create(:household, transaction_type: 1, date: Time.current, amount: 1000, user:,
-                         category:)
     end
 
     context 'when the image is valid' do
