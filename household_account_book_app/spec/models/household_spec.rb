@@ -70,6 +70,48 @@ RSpec.describe Household, type: :model do
       household.name = 'A' * 21
       expect(household).not_to be_valid
     end
+
+    let(:expense) do
+      create(:household, transaction_type: 1, date: Time.current, amount: 1000, user:,
+                         category:)
+    end
+
+    context 'when the image is valid' do
+      it 'allows uploading a JPEG file' do
+        expense.images.attach(io: File.open('spec/fixtures/files/sample.jpeg'), filename: 'sample.jpeg',
+                              content_type: 'image/jpeg')
+        expect(expense).to be_valid
+      end
+
+      it 'allows uploading a PNG file' do
+        expense.images.attach(io: File.open('spec/fixtures/files/sample.png'), filename: 'sample.png',
+                              content_type: 'image/png')
+        expect(expense).to be_valid
+      end
+
+      it 'allows uploading a PDF file' do
+        expense.images.attach(io: File.open('spec/fixtures/files/sample.pdf'), filename: 'sample.pdf',
+                              content_type: 'application/pdf')
+        expect(expense).to be_valid
+      end
+    end
+
+    context 'when the image is invalid' do
+      it 'does not allow uploading a file larger than 5MB' do
+        large_file = Tempfile.new(['large_file', '.jpeg'])
+        large_file.write('a' * (5.megabytes + 1))
+        large_file.rewind
+
+        expense.images.attach(io: large_file, filename: 'large_file.jpeg', content_type: 'image/jpeg')
+        expect(expense).not_to be_valid
+      end
+
+      it 'does not allow uploading a file with an unsupported format' do
+        expense.images.attach(io: File.open('spec/fixtures/files/sample.txt'), filename: 'sample.txt',
+                              content_type: 'text/plain')
+        expect(expense).not_to be_valid
+      end
+    end
   end
 
   describe 'scopes' do
