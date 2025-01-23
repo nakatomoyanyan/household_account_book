@@ -16,6 +16,7 @@ ja:
         transaction_type: 分類
         amount: 金額
         category: 名目
+        images: 画像
   transaction_type:
     income: "収入"
     fixed_expense: "固定費"
