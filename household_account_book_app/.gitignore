@@ -2,3 +2,5 @@ tmp/
 log/
 household_account_book_app/storage/development.sqlite3
 public/assets/
+storage/
+test/
