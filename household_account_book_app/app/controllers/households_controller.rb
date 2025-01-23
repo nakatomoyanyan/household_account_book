@@ -2,17 +2,7 @@ class HouseholdsController < ApplicationController
   include UserResourceConcern
   def index
     @household = Household.new
-    @financial_summary_this_year = current_user.households.financial_summary_this_year
-    @financial_summary_this_month = current_user.households.financial_summary_this_month
-    @years_months = current_user.households.distinct_years_months
-    params[:q] ||= {}
-    @q = current_user.households.ransack(params[:q])
-    @total_amount_households = @q.result.sum(:amount)
-    @households = @q.result
-                    .eager_load(:category)
-                    .order(date: :desc, id: :asc)
-                    .page(params[:page])
-                    .per(50)
+    set_index_variables
   end
 
   def create
@@ -21,7 +11,8 @@ class HouseholdsController < ApplicationController
       flash[:notice] = '登録に成功しました'
       redirect_to households_path(current_user)
     else
-      flash[:notice] = '登録に失敗しました'
+      flash.now[:notice] = '登録に失敗しました'
+      set_index_variables
       render 'index', status: :unprocessable_entity
     end
   end
@@ -31,7 +22,7 @@ class HouseholdsController < ApplicationController
     @incomes_this_year = incomes.this_year.eager_load(:category).decorate
     return unless should_update_incomes_graph?
 
-      IncomesGraphDataJob.perform_later(current_user.id)
+    IncomesGraphDataJob.perform_later(current_user.id)
   end
 
   def collecting_incomes_graph_data
@@ -57,7 +48,7 @@ class HouseholdsController < ApplicationController
   private
 
   def household_params
-    params.require(:household).permit(:name, :date, :amount, :category_id, :transaction_type)
+    params.require(:household).permit(:name, :date, :amount, :category_id, :transaction_type, images: [])
   end
 
   def render_incomes_graph_data(_graph_data, status: 'completed')
@@ -74,5 +65,19 @@ class HouseholdsController < ApplicationController
     return true if latest_graph_data.nil?
 
     incomes_updated_at >= latest_graph_data.updated_at
+  end
+
+  def set_index_variables
+    @financial_summary_this_year = current_user.households.financial_summary_this_year
+    @financial_summary_this_month = current_user.households.financial_summary_this_month
+    @years_months = current_user.households.distinct_years_months
+    params[:q] ||= {}
+    @q = current_user.households.ransack(params[:q])
+    @total_amount_households = @q.result.sum(:amount)
+    @households = @q.result
+                    .eager_load(:category)
+                    .order(date: :desc, id: :asc)
+                    .page(params[:page])
+                    .per(50)
   end
 end
