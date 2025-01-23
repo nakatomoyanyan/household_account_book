@@ -199,6 +199,22 @@ header {
       .pagination .page {
         margin-right: 50px;
       }
+      .index-households {
+        .household-list {
+          .images-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            .images {
+              width: 300px;
+              height: 300px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+          }
+        }
+      }
     }
   }
 }
