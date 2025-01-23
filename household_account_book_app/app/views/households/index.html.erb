@@ -60,6 +60,10 @@
                             <%= f.label :transaction_type, "分類", class: "form-label" %>
                             <%= f.select :transaction_type, households_transahion_type_i18n_options, { prompt: "選択してください" }, class: "form-control" %>                        
                         </div>
+                        <div class="image">
+                            <%= f.label :images, "画像をアップロード(5MB以下のファイルかつJPEG、PNG、PDFのみ選択可)" %>
+                            <%= f.file_field :images, multiple: true, accept: "image/jpeg,image/png,application/pdf" %>
+                        </div>
                         <div class="submit-button">
                             <%= f.submit "登録", class: "button"%>
                         </div>
@@ -91,10 +95,21 @@
                         <% if @households.present? %>
                         <p>検索結果の合計金額<%= number_to_currency(@total_amount_households)%></p>
                         <div class="index-households">
-                            <ul>
+                            <ul class="household-list">
                                 <% @households.each do |household| %>
-                                <li><%= household.date %> - <%= household.category.name %> - <%= number_to_currency(household.amount) %></li>
-                                <% end %>
+                                <li><%= household.date %> - <%= household.category.name %> - <%= number_to_currency(household.amount) %></li>                         
+                                <div class="images-container">
+                                    <% household.images.each do |image| %>
+                                        <div class="images">
+                                            <% if image.image? %>
+                                                <%= image_tag image, size: "300x300" %>
+                                            <% else %>
+                                                <iframe src="<%= url_for(image) %>" width="300" height="300"></iframe>
+                                            <% end %>
+                                        </div>
+                                    <% end %>
+                                </div>
+                        <% end %>
                             </ul>
                         </div>
                         <div class="pagination">
