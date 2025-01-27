@@ -89,16 +89,16 @@ class Household < ApplicationRecord
   private
 
   def image_file_type
-    images.each do |image|
-      unless ['image/jpeg', 'image/png', 'application/pdf'].include?(image.blob.content_type)
-        errors.add(:images, 'はJPEG、PNG、またはPDF形式でアップロードしてください')
-      end
+    return if images.blank? || images.all? do |image|
+      ['image/jpeg', 'image/png', 'application/pdf'].include?(image.blob.content_type)
     end
+
+    errors.add(:images, 'はJPEG、PNG、またはPDF形式でアップロードしてください')
   end
 
   def image_file_size
-    images.each do |image|
-      errors.add(:images, '1つにつき5MB以内にしてください') if image.blob.byte_size > 5.megabytes
-    end
+    return if images.blank? || images.all? { |image| image.blob.byte_size < 5.megabytes }
+
+    errors.add(:images, '1つにつき5MB以内にしてください')
   end
 end
