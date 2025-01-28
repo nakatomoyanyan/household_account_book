@@ -1,12 +1,15 @@
 class Household < ApplicationRecord
   belongs_to :user
   belongs_to :category
+  has_many_attached :images
 
   enum :transaction_type, { income: 0, fixed_expense: 1, variable_expense: 2 }
   validates :name, length: { maximum: 20 }, allow_blank: true
   validates :date, presence: true
   validates :transaction_type, presence: true
   validates :amount, presence: true
+  validate :image_file_type
+  validate :image_file_size
 
   scope :income, lambda {
     where(transaction_type: 0)
@@ -81,5 +84,21 @@ class Household < ApplicationRecord
     select("DISTINCT strftime('%Y', date) AS year, strftime('%m', date) AS month")
       .order('year DESC, month DESC')
       .map { |record| [record.year, record.month] }
+  end
+
+  private
+
+  def image_file_type
+    return if images.blank? || images.all? do |image|
+      ['image/jpeg', 'image/png', 'application/pdf'].include?(image.blob.content_type)
+    end
+
+    errors.add(:images, 'はJPEG、PNG、またはPDF形式でアップロードしてください')
+  end
+
+  def image_file_size
+    return if images.blank? || images.all? { |image| image.blob.byte_size < 5.megabytes }
+
+    errors.add(:images, '1つにつき5MB以内にしてください')
   end
 end
